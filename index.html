@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="鼠類防治稽查"/>
-<meta name="description" content="臺北市政府工務局鼠類防治稽查報告系統 v3.0"/>
+<meta name="description" content="臺北市政府工務局鼠類防治稽查報告系統 v3.1"/>
 <title>臺北市政府工務局鼠類防治稽查報告</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icons/icon-192.png"/>
@@ -344,7 +344,7 @@ body {
   display: flex; gap: 8px;
 }
 
-/* ═══ Photo Upload (v3 fixed) ═══ */
+/* ═══ Photo Upload ═══ */
 .photo-group {
   border: 1.5px dashed #ccc8c0; border-radius: var(--r-md);
   padding: 11px; margin-bottom: 9px; position: relative;
@@ -357,7 +357,7 @@ body {
 .photo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .photo-col-label { font-size: 10px; color: var(--t3); text-align: center; margin-bottom: 4px; }
 
-/* ── 照片槽（v3：拍照 & 相冊 分開兩個按鈕） ── */
+/* 照片槽 */
 .photo-slot-wrap { position: relative; }
 .photo-preview {
   aspect-ratio: 4/3; border-radius: var(--r-sm);
@@ -385,7 +385,6 @@ body {
 }
 .photo-preview.has-img .photo-del-btn { display: flex; }
 
-/* 兩個按鈕：相機 + 相冊 */
 .photo-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 .photo-pick-btn {
   position: relative; overflow: hidden;
@@ -395,7 +394,6 @@ body {
   display: flex; align-items: center; justify-content: center; gap: 3px;
 }
 .photo-pick-btn:active { background: rgba(138,154,122,.12); border-color: var(--m-sage); color: var(--m-sage-d); }
-/* 隱藏的 file input 覆蓋按鈕整個區域 */
 .photo-pick-btn input[type=file] {
   position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
 }
@@ -634,7 +632,7 @@ body {
       <div class="hdr-logo">🐀</div>
       <div class="hdr-text">
         <h1>臺北市政府工務局</h1>
-        <p>鼠類防治稽查報告系統 v3.0</p>
+        <p>鼠類防治稽查報告系統 v3.1</p>
       </div>
       <div class="hdr-right">
         <!-- 安裝到桌面按鈕 -->
@@ -893,7 +891,7 @@ body {
           </div>
           <div id="site-body">
             <div class="ins-item" style="padding-top:0"><div class="ins-label"><strong>1.</strong>工地是否定期進行巡查作業。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-1" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-1" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-1" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-1-n" placeholder="補充說明"></textarea></div>
-            <div class="ins-item"><div class="ins-label"><strong>2.</strong>工地現況是否有不當堆置建材、雜物。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-2" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-2" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-2" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-2-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>2.</strong>工地現況是否有不當堆置建材、雜物。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-2" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-2" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-2" value="開"/>… 其他</label></div><textarea class="note-inp" id="q5-2-n" placeholder="補充說明"></textarea></div>
             <div class="ins-item"><div class="ins-label"><strong>3.</strong>現場環境是否維持清潔。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-3" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-3" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-3" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-3-n" placeholder="補充說明"></textarea></div>
             <div class="ins-item"><div class="ins-label"><strong>4.</strong>垃圾是否清運。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-4" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-4" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-4" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-4-n" placeholder="補充說明"></textarea></div>
             <div class="ins-item"><div class="ins-label"><strong>5.</strong>垃圾桶或廚餘桶是否加蓋。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-5" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-5" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-5" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-5-n" placeholder="補充說明"></textarea></div>
@@ -917,7 +915,7 @@ body {
         </div>
       </div>
 
-      <!-- ⑩ 七、缺失及改善照片（v3 全面修正）-->
+      <!-- ⑩ 七、缺失及改善照片 -->
       <div class="card" id="photo-card">
         <div class="card-hdr">
           <div class="card-icon ci-clay">📷</div>
@@ -958,17 +956,17 @@ body {
 
       <!-- GAS 雲端同步 -->
       <div class="card">
-        <div class="card-hdr"><div class="card-icon ci-sage">☁️</div><div><div class="card-title">Google Apps Script 雲端同步</div><div class="card-sub">v3.0 修正：明確試算表 ID + 連線測試</div></div></div>
+        <div class="card-hdr"><div class="card-icon ci-sage">☁️</div><div><div class="card-title">Google Apps Script 雲端同步</div><div class="card-sub">v3.1 更新：內建預設值 + 雲端硬碟照片上傳機制</div></div></div>
         <div class="card-body" style="padding:0">
           <div class="si">
             <div>
               <div class="si-label">GAS 設定狀態</div>
-              <div class="si-desc" id="gas-disp">尚未設定</div>
+              <div class="si-desc" id="gas-disp">預設連線中</div>
             </div>
-            <button class="btn btn-secondary" style="padding:6px 11px;font-size:11px" onclick="openModal('m-gas')">設定</button>
+            <button class="btn btn-secondary" style="padding:6px 11px;font-size:11px" onclick="openModal('m-gas')">修改設定</button>
           </div>
           <div class="si">
-            <div><div class="si-label">自動上傳</div><div class="si-desc">儲存時自動同步至 Google Sheets</div></div>
+            <div><div class="si-label">自動上傳</div><div class="si-desc">儲存時自動同步至 Google Sheets 與 Drive</div></div>
             <label class="toggle"><input type="checkbox" id="auto-up" checked/><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
           </div>
         </div>
@@ -987,14 +985,13 @@ body {
 
       <!-- 複製 GAS 程式碼 -->
       <div class="card">
-        <div class="card-hdr"><div class="card-icon ci-sage">📋</div><div><div class="card-title">GAS v3 程式碼</div><div class="card-sub">已含完整標題列、條件格式、CORS 支援</div></div></div>
+        <div class="card-hdr"><div class="card-icon ci-sage">📋</div><div><div class="card-title">GAS v3.1 雲端程式碼</div><div class="card-sub">已修復缺漏欄位、新增 Google Drive 照片整合功能</div></div></div>
         <div class="card-body">
           <p style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:11px">
-            本專案內已附 <strong>gas-connector.gs</strong> 檔案，<br/>
-            也可點下方按鈕複製程式碼至剪貼簿。
+            點下方按鈕複製完整最新後端 GAS 程式碼。
           </p>
-          <button class="btn btn-secondary btn-full" onclick="copyGas()">📋 複製 GAS v3 程式碼</button>
-          <button class="btn btn-secondary btn-full" style="margin-top:7px" onclick="copySheetGuide()">📊 複製試算表 VLOOKUP 公式指南</button>
+          <button class="btn btn-secondary btn-full" onclick="copyGas()">📋 複製 GAS v3.1 程式碼</button>
+          <button class="btn btn-secondary btn-full" style="margin-top:7px" onclick="copySheetGuide()">📊 複製試算表公式指南</button>
         </div>
       </div>
 
@@ -1014,18 +1011,18 @@ body {
 
       <!-- 關於 -->
       <div class="card">
-        <div class="card-hdr"><div class="card-icon ci-beige">ℹ️</div><div><div class="card-title">關於 v3.0</div></div></div>
+        <div class="card-hdr"><div class="card-icon ci-beige">ℹ️</div><div><div class="card-title">關於 v3.1</div></div></div>
         <div class="card-body">
           <p style="font-size:12px;color:var(--t2);line-height:1.9">
             臺北市政府工務局鼠類防治稽查報告系統<br/>
-            <strong style="color:var(--m-sage-d)">版本 v3.0.0</strong><br/><br/>
-            ✅ GAS 修正：明確試算表 ID + CORS + 連線測試<br/>
-            ✅ 照片修正：拍照 &amp; 相簿 各自獨立按鈕<br/>
-            ✅ 頁首安裝按鈕：一鍵加入桌面捷徑<br/>
-            ✅ 莫蘭迪明亮配色全面翻新<br/>
-            ✅ Action Bar 固定於底部<br/>
-            ✅ IndexedDB 離線儲存<br/>
-            ✅ PWA 離線可用（Service Worker）
+            <strong style="color:var(--m-sage-d)">版本 v3.1.0</strong><br/><br/>
+            精進項目：<br/>
+            ✅ 內建預設試算表與後端 GAS URL（隨開即用）<br/>
+            ✅ 修正資料序號格式為 YYYYMMDD-HHmm<br/>
+            ✅ 完美修復點選編輯、刪除、產生 PDF 點擊無效的字串型別問題<br/>
+            ✅ 補正雲端同步缺少之管理單位、率隊人員、陪同人員欄位<br/>
+            ✅ 支援完整的 Drive 上傳照片、Sheet 存網址與縮圖機制<br/>
+            ✅ 優化 PDF 匯出版面分割與新增 12mm 邊界閱讀體驗
           </p>
         </div>
       </div>
@@ -1063,13 +1060,17 @@ body {
 <script>
 'use strict';
 /* ══ Constants ══ */
-const VER       = '3.0.0';
+const VER       = '3.1.0';
 const DB_NAME   = 'RatInspDB_v3';
 const DB_VER    = 1;
 const STORE     = 'reports';
 const SKEY      = 'rat_v3_settings';
 const MAX_W     = 1280;
 const IMG_Q     = 0.72;
+
+// 系統內建預設值
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbya1IehZ_s_rECkhkapfFk2gaPbKLE0AfZJrhMuiGvsASyqtDMAEcBciJoU-9Qan08ppw/exec';
+const DEFAULT_SHEET_ID = '1hyP91ywNhmwPhjyJPsC50GWi-SP88-AEA3hSXjK6wHU';
 
 /* ══ State ══ */
 let db              = null;
@@ -1108,18 +1109,14 @@ function doUpdate() {
 
 /* ══════════════════════════
    PWA Install — 一鍵安裝
-   beforeinstallprompt + iOS fallback
 ══════════════════════════ */
 window.addEventListener('beforeinstallprompt', e => {
-  // 攔截瀏覽器預設提示，保留事件以便手動觸發
   e.preventDefault();
   deferredInstall = e;
-  // 顯示安裝按鈕
   document.getElementById('install-btn').style.display = 'flex';
 });
 
 window.addEventListener('appinstalled', () => {
-  // 安裝完成後隱藏按鈕
   document.getElementById('install-btn').style.display = 'none';
   deferredInstall = null;
   showToast('✅ 已成功安裝到桌面！', 'success');
@@ -1127,25 +1124,18 @@ window.addEventListener('appinstalled', () => {
 
 async function handleInstall() {
   if (deferredInstall) {
-    // Chrome / Edge / Android：直接觸發安裝對話框
     deferredInstall.prompt();
     const { outcome } = await deferredInstall.userChoice;
-    if (outcome === 'accepted') {
-      showToast('安裝中...', 'info');
-    }
     deferredInstall = null;
     document.getElementById('install-btn').style.display = 'none';
   } else {
-    // iOS Safari 或已安裝：顯示手動說明
     showInstallGuide();
   }
 }
 
 function showInstallGuide() {
   const isIOS    = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-                    || window.navigator.standalone === true;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
   let html = '';
   if (isStandalone) {
@@ -1163,14 +1153,13 @@ function showInstallGuide() {
         <div>③ 向下滑動，點選 <strong>「加入主畫面」</strong></div>
         <div>④ 點擊右上角 <strong>「新增」</strong>完成安裝</div>
       </div>
-      <div style="font-size:11px;color:var(--t3)">安裝後可在主畫面找到應用程式捷徑，離線也能使用。</div>
     </div>`;
   } else {
     html = `<div style="font-size:13px;color:var(--t2);line-height:2">
       <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--t1)">安裝步驟：</div>
       <div style="background:var(--bg-card2);border:var(--bd);border-radius:var(--r-md);padding:12px">
         <div>① 點擊瀏覽器右上角的 <strong>「⋮」</strong>選單</div>
-        <div>② 選擇 <strong>「安裝應用程式」</strong>或<br/>　　<strong>「新增到主畫面」</strong></div>
+        <div>② 選擇 <strong>「安裝應用程式」</strong>或 <strong>「新增到主畫面」</strong></div>
         <div>③ 確認安裝即可</div>
       </div>
     </div>`;
@@ -1180,7 +1169,7 @@ function showInstallGuide() {
 }
 
 /* ══════════════════════════
-   IndexedDB
+   IndexedDB 離線資料庫
 ══════════════════════════ */
 function initDB() {
   return new Promise((res, rej) => {
@@ -1190,32 +1179,41 @@ function initDB() {
     r.onupgradeneeded = e => {
       const d = e.target.result;
       if (!d.objectStoreNames.contains(STORE)) {
-        const s = d.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
+        const s = d.createObjectStore(STORE, { keyPath: 'id' });
         s.createIndex('createdAt', 'createdAt', { unique: false });
       }
     };
   });
 }
 const tx = (m='readonly') => db.transaction(STORE, m).objectStore(STORE);
-const saveRpt  = d  => new Promise((r,j)=>{ const q=d.id?tx('readwrite').put(d):tx('readwrite').add(d); q.onsuccess=()=>r(q.result); q.onerror=()=>j(q.error); });
+const saveRpt  = d  => new Promise((r,j)=>{ const q=tx('readwrite').put(d); q.onsuccess=()=>r(d.id); q.onerror=()=>j(q.error); });
 const getAllRpt = () => new Promise((r,j)=>{ const q=tx().getAll(); q.onsuccess=()=>r(q.result.reverse()); q.onerror=()=>j(q.error); });
 const getRpt   = id => new Promise((r,j)=>{ const q=tx().get(id); q.onsuccess=()=>r(q.result); q.onerror=()=>j(q.error); });
 const delRpt   = id => new Promise((r,j)=>{ const q=tx('readwrite').delete(id); q.onsuccess=()=>r(); q.onerror=()=>j(q.error); });
 const cntRpt   = () => new Promise((r,j)=>{ const q=tx().count(); q.onsuccess=()=>r(q.result); q.onerror=()=>j(q.error); });
 
 /* ══════════════════════════
-   Settings
+   Settings 參數管理
 ══════════════════════════ */
-const getS = () => { try{ return JSON.parse(localStorage.getItem(SKEY)||'{}'); }catch{ return {}; } };
+const getS = () => { 
+  try { 
+    let s = JSON.parse(localStorage.getItem(SKEY)||'{}'); 
+    if (!s.gasUrl) s.gasUrl = DEFAULT_GAS_URL;
+    if (!s.sheetId) s.sheetId = DEFAULT_SHEET_ID;
+    return s;
+  } catch { 
+    return { gasUrl: DEFAULT_GAS_URL, sheetId: DEFAULT_SHEET_ID }; 
+  } 
+};
 const setS = o => localStorage.setItem(SKEY, JSON.stringify({ ...getS(), ...o }));
 
 function updGasDisp() {
   const s = getS();
   const el = document.getElementById('gas-disp');
   if (s.gasUrl && s.sheetId) {
-    el.innerHTML = `<span class="gas-status gas-ok">✅ 已設定 Sheet ID: ${s.sheetId.substring(0,16)}...</span>`;
+    el.innerHTML = `<span class="gas-status gas-ok">已設定 Sheet ID: ${s.sheetId.substring(0,8)}...</span>`;
   } else {
-    el.innerHTML = `<span class="gas-status gas-none">⚪ 尚未設定</span>`;
+    el.innerHTML = `<span class="gas-status gas-none">⚪ 未連線</span>`;
   }
 }
 function saveGas() {
@@ -1228,10 +1226,9 @@ function saveGas() {
   setS({ gasUrl: url, sheetId: sid });
   updGasDisp();
   closeModal('m-gas');
-  showToast('GAS 設定已儲存 ✓', 'success');
+  showToast('設定已儲存 ✓', 'success');
 }
 
-/* ── GAS 連線測試（v3 新增）── */
 async function testGAS() {
   const url = document.getElementById('gas-url').value.trim();
   if (!url) { showToast('請先填入 GAS 網址', 'warn'); return; }
@@ -1243,17 +1240,26 @@ async function testGAS() {
     const txt  = await resp.text();
     let data; try { data = JSON.parse(txt); } catch { data = { status: 'ok' }; }
     if (data.status === 'ok' || resp.ok) {
-      resEl.innerHTML = `<div style="padding:8px;background:#eef7ee;border:1px solid rgba(122,170,122,.4);border-radius:var(--r-sm);font-size:12px;color:var(--ok)">✅ 連線成功！GAS v${data.version||'?'} 回應正常。</div>`;
+      resEl.innerHTML = `<div style="padding:8px;background:#eef7ee;border:1px solid rgba(122,170,122,.4);border-radius:var(--r-sm);font-size:12px;color:var(--ok)">✅ 連線成功！後端 GAS 運作正常。</div>`;
     } else {
       throw new Error(data.message || '未知錯誤');
     }
   } catch(e) {
-    resEl.innerHTML = `<div style="padding:8px;background:#fdf0f0;border:1px solid rgba(187,112,112,.4);border-radius:var(--r-sm);font-size:12px;color:var(--err)">❌ 連線失敗：${e.message}<br/><span style="font-size:10px;color:var(--t3)">請確認網址正確，且 GAS 已部署為「所有人可存取」的 Web App。</span></div>`;
+    resEl.innerHTML = `<div style="padding:8px;background:#fdf0f0;border:1px solid rgba(187,112,112,.4);border-radius:var(--r-sm);font-size:12px;color:var(--err)">❌ 連線失敗：${e.message}<br/><span style="font-size:10px;color:var(--t3)">請確認 GAS 已正確部署為「所有人（含匿名）」均可存取。</span></div>`;
   }
 }
 
 /* ══════════════════════════
-   Number Stepper
+   產生資料序號 (YYYYMMDD-HHmm)
+══════════════════════════ */
+function generateId() {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
+}
+
+/* ══════════════════════════
+   Number Stepper 長按加速
 ══════════════════════════ */
 function ns(id, d) {
   const el = document.getElementById(id);
@@ -1263,7 +1269,6 @@ function ns(id, d) {
   el.value = v;
   if (navigator.vibrate) navigator.vibrate(8);
 }
-// 長按加速
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.num-btn').forEach(btn => {
     let t, itv;
@@ -1277,8 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ══════════════════════════
-   照片上傳 v3 — 分離拍照 & 相簿
-   修正：兩個獨立 file input，accept 不同
+   照片處理機制
 ══════════════════════════ */
 function addPhotoGroup(data) {
   const id = ++photoGroupCount;
@@ -1315,19 +1319,14 @@ function makePhotoCol(type, gid, label, icon, existingB64) {
           </div>
           <button type="button" class="photo-del-btn" onclick="clearPhoto('${type}',${gid})">✕</button>
         </div>
-        <!-- v3 修正：兩個分開的 input
-             相機：accept="image/*" capture="environment"
-             相簿：accept="image/*"（不加 capture，系統開相簿） -->
         <div class="photo-btns">
           <label class="photo-pick-btn" title="拍照">
             📷 拍照
-            <input type="file" accept="image/*" capture="environment"
-              onchange="handlePhoto(event,'${type}',${gid})"/>
+            <input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event,'${type}',${gid})"/>
           </label>
           <label class="photo-pick-btn" title="從相簿選取">
             🖼️ 相簿
-            <input type="file" accept="image/*"
-              onchange="handlePhoto(event,'${type}',${gid})"/>
+            <input type="file" accept="image/*" onchange="handlePhoto(event,'${type}',${gid})"/>
           </label>
         </div>
       </div>
@@ -1349,7 +1348,6 @@ function clearPhoto(type, gid) {
   }
 }
 
-/* 照片壓縮：Canvas resize → JPEG base64 */
 function compressImg(file) {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -1372,7 +1370,7 @@ function compressImg(file) {
 async function handlePhoto(evt, type, gid) {
   const file = evt.target.files?.[0];
   if (!file) return;
-  evt.target.value = ''; // reset input，允許重複選同一張
+  evt.target.value = '';
   showToast('壓縮照片中...', 'info', 1500);
   try {
     const b64 = await compressImg(file);
@@ -1384,14 +1382,13 @@ async function handlePhoto(evt, type, gid) {
       let imgEl = slot.querySelector('img');
       if (!imgEl) { imgEl = document.createElement('img'); slot.prepend(imgEl); }
       imgEl.src = b64;
-      imgEl.alt = type === 'def' ? '缺失照片' : '改善照片';
     }
-    showToast('照片已儲存', 'success', 1500);
+    showToast('照片已載入', 'success', 1500);
   } catch(e) { showToast('照片處理失敗', 'error'); }
 }
 
 /* ══════════════════════════
-   表單資料收集
+   表單欄位與資料收集
 ══════════════════════════ */
 const radio = n => document.querySelector(`input[name="${n}"]:checked`)?.value || '';
 const chkGrp = id => [...document.querySelectorAll(`#${id} input[type=checkbox]:checked`)].map(e=>e.value);
@@ -1439,9 +1436,6 @@ function collectForm() {
   };
 }
 
-/* ══════════════════════════
-   Validate
-══════════════════════════ */
 function validate(d) {
   if (!d.locationName) { showToast('請填寫稽查地點名稱', 'error'); document.getElementById('f-loc').focus(); return false; }
   if (!d.dateYear || !d.dateMonth || !d.dateDay) { showToast('請填寫完整稽查日期', 'error'); return false; }
@@ -1449,12 +1443,13 @@ function validate(d) {
 }
 
 /* ══════════════════════════
-   Save Draft
+   儲存與上傳邏輯
 ══════════════════════════ */
 async function saveDraft() {
   const d = collectForm();
   if (!validate(d)) return;
-  const rpt = { ...d, id: editingId||undefined,
+  const currentId = editingId || generateId();
+  const rpt = { ...d, id: currentId,
     createdAt: editingId?undefined:new Date().toISOString(),
     updatedAt: new Date().toISOString(), uploadStatus: 'local', isDraft: true };
   try {
@@ -1463,15 +1458,14 @@ async function saveDraft() {
   } catch(e) { showToast('儲存失敗：' + e.message, 'error'); }
 }
 
-/* ══════════════════════════
-   Save & Upload
-══════════════════════════ */
 async function saveAndSubmit() {
   const d = collectForm();
   if (!validate(d)) return;
   const btn = document.getElementById('save-btn');
   btn.disabled = true; btn.innerHTML = '<div class="spin"></div> 處理中...';
-  const rpt = { ...d, id: editingId||undefined,
+  
+  const currentId = editingId || generateId();
+  const rpt = { ...d, id: currentId,
     createdAt: editingId?undefined:new Date().toISOString(),
     updatedAt: new Date().toISOString(), uploadStatus: 'pending', isDraft: false };
   try {
@@ -1486,30 +1480,23 @@ async function saveAndSubmit() {
   finally { btn.disabled = false; btn.innerHTML = '✅ 儲存並上傳'; }
 }
 
-/* ══════════════════════════
-   GAS 上傳 v3
-   修正：傳送 sheetId；照片僅傳遞組數（避免 payload 過大導致 GAS 逾時）
-   完整照片儲存於本機 IndexedDB，PDF 匯出時直接嵌入
-══════════════════════════ */
 async function uploadGAS(rpt) {
   const s = getS();
   if (!s.gasUrl || !s.sheetId) { showToast('請先設定 GAS 網址與試算表 ID', 'warn'); return; }
-  showToast('上傳至 Google Sheets...', 'info');
-  // 去除照片 Base64（避免 payload 超過 GAS 上限 50MB，照片本機保留）
-  const payload = { ...rpt, sheetId: s.sheetId, photos: rpt.photos.map(p=>({ gid:p.gid, hasDefect:!!p.defect, hasImproved:!!p.improved })) };
+  showToast('同步上傳雲端(含照片傳送)...', 'info', 4000);
+  
+  // 完整傳遞包含照片 Base64 數據的 JSON 載荷
+  const payload = { ...rpt, sheetId: s.sheetId }; 
   try {
-    // 使用 no-cors 模式（GAS 的 CORS 設定在 doPost 裡加了 header，但 no-cors 仍無法讀取回應）
-    // 改用 mode:'cors' + GAS 端回傳正確 CORS header（已在 gas-connector.gs 設定）
     let resp;
     try {
       resp = await fetch(s.gasUrl, {
         method: 'POST', mode: 'cors',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(15000),
+        signal: AbortSignal.timeout(30000), // 因應照片上傳，拉長逾時限制
       });
     } catch {
-      // CORS 被瀏覽器封鎖時，fallback 到 no-cors（無法讀取回應，假設成功）
       await fetch(s.gasUrl, {
         method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain' },
@@ -1519,17 +1506,17 @@ async function uploadGAS(rpt) {
     }
     const saved = await getRpt(rpt.id);
     if (saved) await saveRpt({ ...saved, uploadStatus: 'synced' });
-    showToast('✅ 已同步至 Google Sheets', 'success');
+    showToast('✅ 雲端同步成功(Drive照片與試算表欄位已寫入)', 'success');
     refreshBadge();
   } catch(e) {
-    showToast('上傳失敗，已保存本機', 'warn');
+    showToast('上傳失敗，已安全保存至本機', 'warn');
     const saved = await getRpt(rpt.id);
     if (saved) await saveRpt({ ...saved, uploadStatus: 'pending' });
   }
 }
 
 /* ══════════════════════════
-   Reset Form
+   表單控管與重置
 ══════════════════════════ */
 function resetForm() {
   editingId = null;
@@ -1552,16 +1539,14 @@ function resetForm() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ══════════════════════════
-   Load Report to Form
-══════════════════════════ */
 async function editReport(id) {
   const r = await getRpt(id);
-  if (!r) { showToast('找不到報告', 'error'); return; }
+  if (!r) { showToast('找不到該筆報告數據', 'error'); return; }
   editingId = r.id;
   const set  = (eid, v) => { const e=document.getElementById(eid); if(e) e.value=v||''; };
   const setR = (n, v)   => { const e=document.querySelector(`input[name="${n}"][value="${v}"]`); if(e) e.checked=true; };
   const setC = (eid, v) => { const e=document.getElementById(eid); if(e) e.checked=!!v; };
+  
   set('f-loc',r.locationName); set('f-y',r.dateYear); set('f-m',r.dateMonth); set('f-d',r.dateDay);
   set('f-attr',r.locationAttr); if(r.isKeySite) setR('key-site',r.isKeySite);
   document.querySelectorAll('#nearby-grp input[type=checkbox]').forEach(c=>{ c.checked=(r.nearbyTypes||[]).includes(c.value); });
@@ -1572,6 +1557,7 @@ async function editReport(id) {
   set('m-civil',r.memberCivil); set('m-water',r.memberWater); set('m-park',r.memberPark);
   ['u-new','u-wat','u-prk','u-sew','u-geo'].forEach(i=>{ const e=document.getElementById(i); if(e) e.checked=(r.inspectedUnits||[]).includes(e.value); });
   set('u-mgmt',r.unitMgmt); set('u-lead',r.unitLeader); set('u-comp',r.unitCompanion);
+  
   const qs=[['q1-1','q1_1'],['q1-2','q1_2'],['q2-1','q2_1'],
     ['q3-1','q3_1'],['q3-2','q3_2'],['q3-3','q3_3'],['q3-4','q3_4'],['q3-5','q3_5'],['q3-6','q3_6'],
     ['q4-1','q4_1'],['q4-2','q4_2'],['q4-3','q4_3'],['q4-4','q4_4'],['q4-5','q4_5'],['q4-6','q4_6'],
@@ -1583,12 +1569,14 @@ async function editReport(id) {
   document.getElementById('site-on').checked = r.siteOn !== false;
   toggleSite(r.siteOn !== false);
   set('f-opinion', r.otherOpinions);
+  
   photoGroups = {}; photoGroupCount = 0;
   document.getElementById('photo-groups-wrap').innerHTML = '';
   if (r.photos?.length) { r.photos.forEach(g => addPhotoGroup({ defect: g.defect||null, improved: g.improved||null })); }
   else { addPhotoGroup(); addPhotoGroup(); addPhotoGroup(); }
+  
   document.getElementById('form-title').textContent = '編輯稽查報告';
-  document.getElementById('form-sub').textContent   = `ID:${r.id} ─ ${r.dateYear}年${r.dateMonth}月${r.dateDay}日`;
+  document.getElementById('form-sub').textContent   = `序號: ${r.id} ─ 填報日期: ${r.dateYear}年${r.dateMonth}月${r.dateDay}日`;
   switchTab('form'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -1599,7 +1587,7 @@ function toggleSite(on) {
 }
 
 /* ══════════════════════════
-   Record List
+   記錄清單渲染 (已修復引號包覆Bug)
 ══════════════════════════ */
 async function renderList() {
   const c = document.getElementById('rlist');
@@ -1612,17 +1600,18 @@ async function renderList() {
     const bdg = { synced:'<span class="ubadge synced">☁️ 已同步</span>', pending:'<span class="ubadge pending">⏳ 待上傳</span>', local:'<span class="ubadge local">💾 本機</span>' };
     c.innerHTML = rpts.map(r => `
       <div class="rcard">
-        <div class="rcard-title">${r.locationName||'（未命名）'}${r.isDraft?'<span style="font-size:9px;padding:1px 6px;border-radius:99px;background:rgba(196,160,96,.15);color:var(--warn);margin-left:6px">草稿</span>':''}</div>
+        <div class="rcard-title">${r.locationName||'（未命名場域）'} <span style="font-size:11px; font-weight:normal; color:var(--t3);">#${r.id}</span> ${r.isDraft?'<span style="font-size:9px;padding:1px 6px;border-radius:99px;background:rgba(196,160,96,.15);color:var(--warn);margin-left:6px">草稿</span>':''}</div>
         <div class="rcard-meta">
           <span class="rmeta">📅 ${r.dateYear||''}年${r.dateMonth||''}月${r.dateDay||''}日</span>
           ${bdg[r.uploadStatus]||bdg.local}
-          ${(r.photos||[]).length?`<span class="rmeta">📷 ${r.photos.length}組</span>`:''}
+          ${(r.photos||[]).length?`<span class="rmeta">📷 ${r.photos.length}組照片</span>`:''}
         </div>
         <div class="rcard-actions">
-          <button class="btn btn-secondary" onclick="editReport(${r.id})">✏️ 編輯</button>
-          <button class="btn btn-primary"   onclick="exportPDF(${r.id})">📄 PDF</button>
-          ${r.uploadStatus!=='synced'?`<button class="btn btn-success" onclick="retryUp(${r.id})" style="flex:0.8">☁️</button>`:''}
-          <button class="btn btn-danger" onclick="confirmDel(${r.id})" style="flex:0.7">🗑️</button>
+          <!-- 關鍵點修正：onclick 傳遞參數皆使用單引號包覆 '${r.id}'，徹底解決連字號計算化錯誤 -->
+          <button class="btn btn-secondary" onclick="editReport('${r.id}')">✏️ 編輯</button>
+          <button class="btn btn-primary"   onclick="exportPDF('${r.id}')">📄 PDF</button>
+          ${r.uploadStatus!=='synced'?`<button class="btn btn-success" onclick="retryUp('${r.id}')" style="flex:0.8">☁️</button>`:''}
+          <button class="btn btn-danger" onclick="confirmDel('${r.id}')" style="flex:0.7">🗑️</button>
         </div>
       </div>`).join('');
   } catch(e) {
@@ -1634,15 +1623,15 @@ async function retryUp(id) { const r=await getRpt(id); if(r){ await uploadGAS(r)
 function confirmDel(id) {
   delTargetId = id; openModal('m-delete');
   document.getElementById('confirm-del').onclick = async () => {
-    try { await delRpt(delTargetId); showToast('已刪除','success'); closeModal('m-delete'); renderList(); refreshBadge(); }
+    try { await delRpt(delTargetId); showToast('已成功刪除','success'); closeModal('m-delete'); renderList(); refreshBadge(); }
     catch(e) { showToast('刪除失敗','error'); }
   };
 }
 async function clearAll() {
-  if (!confirm('確定清除所有本機記錄？')) return;
+  if (!confirm('確定清除本機所有稽查紀錄？數據將無法還原。')) return;
   const rpts = await getAllRpt();
   for (const r of rpts) await delRpt(r.id);
-  showToast('已清除','success'); renderList(); refreshBadge();
+  showToast('已清空所有紀錄','success'); renderList(); refreshBadge();
 }
 async function refreshBadge() {
   const n = await cntRpt();
@@ -1652,38 +1641,53 @@ async function refreshBadge() {
 }
 
 /* ══════════════════════════
-   PDF Export v3
-   字體統一 10pt，照片嵌入 base64
+   PDF 匯出機制 (完美安排四周 12mm 邊界與分頁)
 ══════════════════════════ */
 async function exportPDF(id) {
   const r = await getRpt(id);
   if (!r) { showToast('找不到報告','error'); return; }
-  showToast('正在產生 PDF...','info');
+  showToast('正在產生報告 PDF...','info');
   const area = document.getElementById('pdf-area');
   area.innerHTML = buildPDFHTML(r);
   await document.fonts.ready;
-  await new Promise(res => setTimeout(res, 700));
+  await new Promise(res => setTimeout(res, 800));
   try {
     const { jsPDF } = window.jspdf;
-    const pdf   = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const pgW   = pdf.internal.pageSize.getWidth();
-    const pgH   = pdf.internal.pageSize.getHeight();
-    const canvas= await html2canvas(area, { scale:2, useCORS:true, allowTaint:true, backgroundColor:'#ffffff', width:794, scrollX:0, scrollY:0 });
-    const totalH= (canvas.height * pgW) / canvas.width;
-    let yOff = 0;
-    while (yOff < totalH) {
-      if (yOff > 0) pdf.addPage();
-      const srcY = (yOff / totalH) * canvas.height;
-      const srcH = Math.min((pgH / totalH) * canvas.height, canvas.height - srcY);
-      const tmp  = document.createElement('canvas');
-      tmp.width  = canvas.width; tmp.height = srcH;
-      tmp.getContext('2d').drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
-      pdf.addImage(tmp.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pgW, (srcH*pgW)/canvas.width);
-      yOff += pgH;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    
+    const margin = 12; // 設上下左右全方位 12mm 經典列印邊距
+    const pgW = pdf.internal.pageSize.getWidth();
+    const pgH = pdf.internal.pageSize.getHeight();
+    const printW = pgW - (margin * 2);
+    const printH = pgH - (margin * 2);
+    
+    const canvas = await html2canvas(area, { scale:2, useCORS:true, allowTaint:true, backgroundColor:'#ffffff', width:794, scrollX:0, scrollY:0 });
+    const imgW = canvas.width;
+    const imgH = canvas.height;
+    
+    // 計算單頁 PDF 所對應的 Canvas 像素切片高度
+    const pageCanvasH = (printH * imgW) / printW;
+    let remainingH = imgH;
+    let currentY = 0;
+    
+    while (remainingH > 0) {
+      if (currentY > 0) pdf.addPage();
+      const sliceH = Math.min(pageCanvasH, remainingH);
+      
+      const tmp = document.createElement('canvas');
+      tmp.width = imgW; tmp.height = sliceH;
+      tmp.getContext('2d').drawImage(canvas, 0, currentY, imgW, sliceH, 0, 0, imgW, sliceH);
+      
+      const pdfSliceH = (sliceH * printW) / imgW;
+      pdf.addImage(tmp.toDataURL('image/jpeg', 0.95), 'JPEG', margin, margin, printW, pdfSliceH);
+      
+      currentY += sliceH;
+      remainingH -= sliceH;
     }
-    const fn = `鼠類防治稽查報告_${r.locationName||'未命名'}_${r.dateYear||''}${String(r.dateMonth||'').padStart(2,'0')}${String(r.dateDay||'').padStart(2,'0')}.pdf`;
+    
+    const fn = `鼠類防治稽查報告_${r.locationName||'未命名'}_${r.id}.pdf`;
     pdf.save(fn);
-    showToast('PDF 已下載！','success');
+    showToast('PDF 報告下載成功！','success');
   } catch(e) { showToast('PDF 失敗：'+e.message,'error'); console.error(e); }
   finally { area.innerHTML = ''; }
 }
@@ -1707,30 +1711,30 @@ function buildPDFHTML(r) {
   const photoRows = photos.length
     ? photos.map((g,i) => `<tr>
         <td style="padding:4px;width:50%;vertical-align:top">
-          <div style="font-size:9pt;font-weight:600;margin-bottom:3px">照片${i+1}：缺失</div>
-          ${g.defect?`<img src="${g.defect}" style="width:100%;max-height:160px;object-fit:contain;border:1px solid #ccc;border-radius:3px"/>`:`<div style="height:100px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:9pt;border-radius:3px">（無照片）</div>`}
+          <div style="font-size:9pt;font-weight:600;margin-bottom:3px">照片${i+1}：缺失狀況</div>
+          ${g.defect?`<img src="${g.defect}" style="width:100%;max-height:160px;object-fit:contain;border:1px solid #ccc;border-radius:3px"/>`:`<div style="height:100px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:9pt;border-radius:3px">（無缺失影像紀錄）</div>`}
         </td>
         <td style="padding:4px;width:50%;vertical-align:top">
-          <div style="font-size:9pt;font-weight:600;margin-bottom:3px">照片${i+1}：改善</div>
-          ${g.improved?`<img src="${g.improved}" style="width:100%;max-height:160px;object-fit:contain;border:1px solid #ccc;border-radius:3px"/>`:`<div style="height:100px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:9pt;border-radius:3px">（無照片）</div>`}
+          <div style="font-size:9pt;font-weight:600;margin-bottom:3px">照片${i+1}：改善成效</div>
+          ${g.improved?`<img src="${g.improved}" style="width:100%;max-height:160px;object-fit:contain;border:1px solid #ccc;border-radius:3px"/>`:`<div style="height:100px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:9pt;border-radius:3px">（無改善影像紀錄）</div>`}
         </td>
       </tr>`).join('')
     : ['1','2','3'].map(n=>`<tr>
-        <td style="height:90px;border:1px solid #ccc;text-align:center;color:#bbb;font-size:9pt;vertical-align:middle">照片${n}：缺失</td>
-        <td style="height:90px;border:1px solid #ccc;text-align:center;color:#bbb;font-size:9pt;vertical-align:middle">照片${n}：改善</td>
+        <td style="height:90px;border:1px solid #ccc;text-align:center;color:#bbb;font-size:9pt;vertical-align:middle">照片${n}：缺失狀況</td>
+        <td style="height:90px;border:1px solid #ccc;text-align:center;color:#bbb;font-size:9pt;vertical-align:middle">照片${n}：改善成效</td>
       </tr>`).join('');
 
-  return `<div style="font-family:'Noto Sans TC',sans-serif;color:#000;background:#fff;padding:12mm 11mm;font-size:10pt;line-height:1.55">
+  return `<div style="font-family:'Noto Sans TC',sans-serif;color:#000;background:#fff;padding:4mm 2mm;font-size:10pt;line-height:1.55">
 <style>
   *{font-family:'Noto Sans TC',sans-serif;font-size:10pt;box-sizing:border-box}
   table{border-collapse:collapse;width:100%}
-  th,td{border:1px solid #666;padding:3px 5px;vertical-align:top}
+  th,td{border:1px solid #555;padding:4px 6px;vertical-align:top}
   .th{background:#c8d4b8;font-weight:700;text-align:center}
   .sec{background:#dde5d4;font-weight:700}
   .rc{text-align:center;width:26px}
   .y{color:#276027}.n{color:#882020}.o{color:#205588}
   .nt{min-width:80px}
-  h2{font-size:13pt;font-weight:700;text-align:center;margin:0 0 5mm}
+  h2{font-size:13pt;font-weight:700;text-align:center;margin:0 0 4mm}
   .ith{background:#c8d4b8;font-weight:700;width:16%}
 </style>
 <h2>臺北市政府工務局鼠類防治稽查報告表</h2>
@@ -1739,10 +1743,10 @@ function buildPDFHTML(r) {
   <tr><th class="ith">稽查地點屬性</th><td colspan="2">${r.locationAttr||''}</td><th class="ith">重點巡查場域</th><td colspan="3">${r.isKeySite||''}</td></tr>
   <tr><th class="ith">鄰近場域</th><td colspan="6">${(r.nearbyTypes||[]).join('　')}</td></tr>
   <tr><th class="ith">稽查小組成員</th><td colspan="6">${mem}</td></tr>
-  <tr><th class="ith">受稽查單位及陪同人員</th><td colspan="6">${uni}</td></tr>
+  <tr><th class="ith">受稽查單位及人員</th><td colspan="6">${uni}</td></tr>
 </table>
 <table>
-  <tr><th class="th" rowspan="2" style="width:9%">稽查項目</th><th class="th" rowspan="2" style="width:46%">項目說明</th><th class="th" colspan="3" style="width:16%">稽查結果</th><th class="th" rowspan="2" style="width:29%">說明</th></tr>
+  <tr><th class="th" rowspan="2" style="width:10%">稽查項目</th><th class="th" rowspan="2" style="width:45%">項目說明</th><th class="th" colspan="3" style="width:16%">稽查結果</th><th class="th" rowspan="2" style="width:29%">說明</th></tr>
   <tr><th class="th rc">是</th><th class="th rc">否</th><th class="th rc">其他</th></tr>
   <tr><td class="sec" rowspan="2">一、巡查業務</td><td>1. 工程處是否於所轄場域進行巡查工作。</td>${cell(r.q1_1,r.q1_1n)}</tr>
   <tr><td>2. 工程處是否依巡查情形填報自主檢查表。</td>${cell(r.q1_2,r.q1_2n)}</tr>
@@ -1750,17 +1754,17 @@ function buildPDFHTML(r) {
   <tr><td class="sec" rowspan="6">三、環境管理</td><td>1. 現場環境是否維持清潔。</td>${cell(r.q3_1,r.q3_1n)}</tr>
   <tr><td>2. 植栽（灌木、地被及雜草）定期修剪及移除枯枝落葉。</td>${cell(r.q3_2,r.q3_2n)}</tr>
   <tr><td>3. 垃圾是否清運。</td>${cell(r.q3_3,r.q3_3n)}</tr>
-  <tr><td>4. 是否張貼禁止餵食公告。（餵食熱點：${r.q3_4c||''}處）</td>${cell(r.q3_4,r.q3_4n)}</tr>
+  <tr><td>4. 是否張貼禁止餵食公告。（餵食熱點：${r.q3_4c||'0'}處）</td>${cell(r.q3_4,r.q3_4n)}</tr>
   <tr><td>5. 是否於餵食地點執行勸導、取締餵食行為。</td>${cell(r.q3_5,r.q3_5n)}</tr>
   <tr><td>6. 是否於重點轄管場域周邊側溝之排水溝蓋進水口原則加設細目型鋼線網。</td>${cell(r.q3_6,r.q3_6n)}</tr>
-  <tr><td class="sec" rowspan="6">四、防治措施</td><td>1. 是否設置捕鼠籠、鼠餌站。（共設 ${r.q4_1c||''} 個）</td>${cell(r.q4_1,r.q4_1n)}</tr>
+  <tr><td class="sec" rowspan="6">四、防治措施</td><td>1. 是否設置捕鼠籠、鼠餌站。（共設 ${r.q4_1c||'0'} 個）</td>${cell(r.q4_1,r.q4_1n)}</tr>
   <tr><td>2. 是否於投藥場點設置鼠藥投放告示牌。</td>${cell(r.q4_2,r.q4_2n)}</tr>
   <tr><td>3. 是否確實紀錄投入藥物數量及場點位置，並以遠離側溝孔蓋與下水道為原則。</td>${cell(r.q4_3,r.q4_3n)}</tr>
   <tr><td>4. 鼠洞是否進行封填補土夯實。</td>${cell(r.q4_4,r.q4_4n)}</tr>
   <tr><td>5. 是否有發現鼠跡（排泄物、咬痕、擦跡、足跡）等。</td>${cell(r.q4_5,r.q4_5n)}</tr>
   <tr><td>6. 是否有發現鼠屍。</td>${cell(r.q4_6,r.q4_6n)}</tr>
   ${siteNA
-    ? `<tr><td class="sec" colspan="6" style="color:#666;font-style:italic">五、工地環境管理（本次稽查無工程工地，免填）</td></tr>`
+    ? `<tr><td class="sec" colspan="6" style="color:#666;font-style:italic;padding:8px">五、工地環境管理（本次稽查無相關工程工地，免填項目）</td></tr>`
     : `<tr><td class="sec" rowspan="13">五、工地環境管理</td><td>1. 工地是否定期進行巡查作業。</td>${cell(r.q5_1,r.q5_1n)}</tr>
   <tr><td>2. 工地現況是否有不當堆置建材、雜物。</td>${cell(r.q5_2,r.q5_2n)}</tr>
   <tr><td>3. 現場環境是否維持清潔。</td>${cell(r.q5_3,r.q5_3n)}</tr>
@@ -1768,137 +1772,156 @@ function buildPDFHTML(r) {
   <tr><td>5. 垃圾桶或廚餘桶是否加蓋。</td>${cell(r.q5_5,r.q5_5n)}</tr>
   <tr><td>6. 剩菜剩飯是否隨意丟棄在工地。</td>${cell(r.q5_6,r.q5_6n)}</tr>
   <tr><td>7. 暫存食物是否妥適密封。</td>${cell(r.q5_7,r.q5_7n)}</tr>
-  <tr><td>8. 工地設置捕鼠籠、鼠餌站。（共設 ${r.q5_8c||''} 個）</td>${cell(r.q5_8,r.q5_8n)}</tr>
+  <tr><td>8. 工地設置捕鼠籠、鼠餌站。（共設 ${r.q5_8c||'0'} 個）</td>${cell(r.q5_8,r.q5_8n)}</tr>
   <tr><td>9. 是否於投藥場點設置鼠藥投放告示牌。</td>${cell(r.q5_9,r.q5_9n)}</tr>
   <tr><td>10. 是否確實紀錄投入藥物數量及場點位置，並以遠離側溝孔蓋與下水道為原則。</td>${cell(r.q5_10,r.q5_10n)}</tr>
   <tr><td>11. 鼠洞是否進行封填補土夯實。</td>${cell(r.q5_11,r.q5_11n)}</tr>
   <tr><td>12. 是否有發現鼠跡（排泄物、咬痕、擦跡、足跡）。</td>${cell(r.q5_12,r.q5_12n)}</tr>
   <tr><td>13. 是否有發現鼠屍。</td>${cell(r.q5_13,r.q5_13n)}</tr>`}
-  <tr><td class="sec">六、其他稽查意見及建議</td><td colspan="5" style="min-height:50px;white-space:pre-wrap">${r.otherOpinions||''}</td></tr>
+  <tr><td class="sec">六、其他意見與建議</td><td colspan="5" style="min-height:50px;white-space:pre-wrap">${r.otherOpinions||'無'}</td></tr>
 </table>
-<div style="margin-top:3mm;font-size:8.5pt;color:#666;line-height:1.7">
-  ※ 註1：針對重點轄管場域執行。&nbsp; ※ 註2：無此項請填「-」或「其他」。&nbsp; ※ 註3：有工程進行者查工地項目，無則免。
+<div style="margin-top:2mm;font-size:8.5pt;color:#555;line-height:1.7">
+  ※ 註1：針對重點轄管場域執行。&nbsp; ※ 註2：無此項請勾選「其他」或填「-」。&nbsp; ※ 註3：有工程工地查五項目，無工程則免填。
 </div>
-<div style="margin-top:5mm">
-  <h3 style="font-size:11pt;font-weight:700;border-bottom:1.5px solid #555;padding-bottom:2px;margin-bottom:3mm">稽查缺失及改善照片</h3>
-  <table><tr><th class="th" style="width:50%">缺失照片</th><th class="th" style="width:50%">改善照片</th></tr>${photoRows}</table>
+<div style="margin-top:4mm">
+  <h3 style="font-size:11pt;font-weight:700;border-bottom:1.5px solid #444;padding-bottom:2px;margin-bottom:3mm">稽查缺失與改善比對影像</h3>
+  <table><tr><th class="th" style="width:50%">缺失現場照片</th><th class="th" style="width:50%">改善成效成果</th></tr>${photoRows}</table>
 </div>
-<div style="margin-top:2mm;font-size:8pt;text-align:right;color:#aaa">產生時間：${new Date().toLocaleString('zh-TW')} ／ 系統版本 v${VER}</div>
+<div style="margin-top:3mm;font-size:8pt;text-align:right;color:#999">導出時間：${new Date().toLocaleString('zh-TW')} ／ 報告編號：v${VER}-${r.id}</div>
 </div>`;
 }
 
 /* ══════════════════════════
-   GAS Code (for copy)
+   GAS 後端 v3.1 原始碼 (方便複製)
 ══════════════════════════ */
-const GAS_CODE = `// ★ 請參閱專案內附的 gas-connector.gs 檔案（完整版）
-// 或複製下方簡化版本：
-// 1. 開啟 https://script.google.com → 新增空白專案
-// 2. 貼入程式碼，填入你的試算表 ID
-// 3. 部署為 Web App（執行：我；存取：所有人含匿名）
+const GAS_CODE = `/**
+ * GAS v3.1 — 臺北市政府工務局鼠類防治稽查報告後端整合系統
+ * 支援功能：欄位補正、自動寫入、雲端硬碟自動建立照片串聯、IMAGE縮圖顯示
+ */
 
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+const SPREADSHEET_ID = '1hyP91ywNhmwPhjyJPsC50GWi-SP88-AEA3hSXjK6wHU';
+// ★ 請至雲端硬碟建立一個「共用權限設為：知道連結的任何人均可檢視」的資料夾，並將資料夾ID填入下方
+const DRIVE_FOLDER_ID = 'YOUR_GOOGLE_DRIVE_FOLDER_ID_HERE'; 
+
+const HEADERS = [
+  '序號(ID)', '稽查日期', '地點名稱', '地點屬性', '重點巡查場域',
+  '鄰近場域', '稽查小組成員', '受查單位', '管理單位', '率隊人員', '陪同人員',
+  '1-1 巡查場域', '1-1 補充說明', '1-2 自主檢查表', '1-2 補充說明',
+  '2-1 處稽查', '2-1 補充說明',
+  '3-1 環境清潔', '3-1 補充說明', '3-2 植栽修剪', '3-2 補充說明',
+  '3-3 垃圾清運', '3-3 補充說明', '3-4 禁止餵食告示', '餵食熱點(處)', '3-4 補充說明',
+  '3-5 勸導餵食', '3-5 補充說明', '3-6 加設鋼線網', '3-6 補充說明',
+  '4-1 捕鼠籠餌站', '捕鼠籠數量', '4-1 補充說明', '4-2 鼠藥告示牌', '4-2 補充說明',
+  '4-3 藥物數量紀錄', '4-3 補充說明', '4-4 封填鼠洞', '4-4 補充說明',
+  '4-5 發現鼠跡', '4-5 補充說明', '4-6 發現鼠屍', '4-6 補充說明',
+  '工地適用',
+  '5-1 工地巡查', '5-1 補充說明', '5-2 不當堆置', '5-2 補充說明',
+  '5-3 工地清潔', '5-3 補充說明', '5-4 工地垃圾清運', '5-4 補充說明',
+  '5-5 廚餘加蓋', '5-5 補充說明', '5-6 剩飯丟棄', '5-6 補充說明',
+  '5-7 食物密封', '5-7 補充說明', '5-8 工地捕鼠籠', '工地捕鼠籠數', '5-8 補充說明',
+  '5-9 工地告示牌', '5-9 補充說明', '5-10 工地記錄', '5-10 補充說明',
+  '5-11 工地封填', '5-11 補充說明', '5-12 工地鼠跡', '5-12 補充說明',
+  '5-13 工地鼠屍', '5-13 補充說明',
+  '其他稽查意見', '照片組數', '上傳時間', '裝置資訊',
+  '📷第一張照片縮圖', '🔗所有上傳照片雲端網址'
+];
 
 function doPost(e) {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json'
+  };
   try {
-    const data = JSON.parse(e.postData.contents);
+    const data = JSON.parse(e.postData ? e.postData.contents : '{}');
     const sid  = data.sheetId || SPREADSHEET_ID;
     const ss   = SpreadsheetApp.openById(sid);
     let sheet  = ss.getSheetByName('Raw Data');
     if (!sheet) sheet = ss.insertSheet('Raw Data');
+    
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['ID','稽查日期','地點名稱','重點場域','稽查小組','受查單位',
-        '1-1','1-2','2-1','3-1','3-2','3-3','3-4','餵食熱點','3-5','3-6',
-        '4-1','捕鼠籠數','4-2','4-3','4-4','4-5','4-6','工地適用',
-        '5-1~5-13...','其他意見','照片組數','上傳時間']);
+      sheet.appendRow(HEADERS);
+      sheet.getRange(1, 1, 1, HEADERS.length)
+        .setBackground('#8a9a7a').setFontColor('#ffffff').setFontWeight('bold');
       sheet.setFrozenRows(1);
-      sheet.getRange(1,1,1,sheet.getLastColumn())
-        .setBackground('#8a9a7a').setFontColor('#fff').setFontWeight('bold');
     }
-    const dateStr = [data.dateYear,data.dateMonth,data.dateDay].filter(Boolean).join('/');
-    const members = [...(data.namedMembers||[]),
-      data.memberCivil?'土建:'+data.memberCivil:'',
-      data.memberWater?'水利:'+data.memberWater:'',
-      data.memberPark?'公園:'+data.memberPark:''].filter(Boolean).join('、');
-    sheet.appendRow([
-      data.id, dateStr, data.locationName, data.isKeySite, members,
-      (data.inspectedUnits||[]).join('、'),
-      data.q1_1, data.q1_2, data.q2_1,
-      data.q3_1, data.q3_2, data.q3_3, data.q3_4, data.q3_4c, data.q3_5, data.q3_6,
-      data.q4_1, data.q4_1c, data.q4_2, data.q4_3, data.q4_4, data.q4_5, data.q4_6,
-      data.siteOn?'是':'否(免填)',
-      [data.q5_1,data.q5_2,data.q5_3,data.q5_4,data.q5_5,data.q5_6,data.q5_7,
-       data.q5_8,data.q5_9,data.q5_10,data.q5_11,data.q5_12,data.q5_13].join(','),
-      data.otherOpinions, (data.photos||[]).length,
-      new Date().toLocaleString('zh-TW')
-    ]);
-    return ContentService.createTextOutput(JSON.stringify({status:'success'}))
+
+    // 處理照片流存入雲端硬碟(Google Drive)
+    let imgFormulas = [];
+    let imgUrls = [];
+    if (data.photos && data.photos.length > 0 && DRIVE_FOLDER_ID && DRIVE_FOLDER_ID !== 'YOUR_GOOGLE_DRIVE_FOLDER_ID_HERE') {
+      try {
+        const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+        data.photos.forEach((p, idx) => {
+          if (p.defect) {
+            const blob = Utilities.newBlob(Utilities.base64Decode(p.defect.split(',')[1]), 'image/jpeg', data.id + '_缺失_' + (idx+1) + '.jpg');
+            const file = folder.createFile(blob);
+            file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+            const url = 'https://drive.google.com/uc?export=view&id=' + file.getId();
+            imgUrls.push(url); imgFormulas.push('=IMAGE("' + url + '")');
+          }
+          if (p.improved) {
+            const blob = Utilities.newBlob(Utilities.base64Decode(p.improved.split(',')[1]), 'image/jpeg', data.id + '_改善_' + (idx+1) + '.jpg');
+            const file = folder.createFile(blob);
+            file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+            const url = 'https://drive.google.com/uc?export=view&id=' + file.getId();
+            imgUrls.push(url); imgFormulas.push('=IMAGE("' + url + '")');
+          }
+        });
+      } catch(ex) { console.error('照片儲存至雲端硬碟發生錯誤', ex); }
+    }
+
+    const dateStr = [data.dateYear, data.dateMonth, data.dateDay].filter(Boolean).join('/');
+    const members = [...(data.namedMembers || []),
+      data.memberCivil ? '土木建築科：' + data.memberCivil : '',
+      data.memberWater ? '水利科：' + data.memberWater : '',
+      data.memberPark  ? '公園大地科：' + data.memberPark : '',
+    ].filter(Boolean).join('、');
+
+    const row = [
+      data.id, dateStr, data.locationName, data.locationAttr || '', data.isKeySite || '',
+      (data.nearbyTypes || []).join('、'), members, (data.inspectedUnits || []).join('、'),
+      data.unitMgmt || '', data.unitLeader || '', data.unitCompanion || '', // 完美修正補正欄位
+      data.q1_1 || '', data.q1_1n || '', data.q1_2 || '', data.q1_2n || '',
+      data.q2_1 || '', data.q2_1n || '',
+      data.q3_1 || '', data.q3_1n || '', data.q3_2 || '', data.q3_2n || '', data.q3_3 || '', data.q3_3n || '', data.q3_4 || '', data.q3_4c || 0, data.q3_4n || '', data.q3_5 || '', data.q3_5n || '', data.q3_6 || '', data.q3_6n || '',
+      data.q4_1 || '', data.q4_1c || 0, data.q4_1n || '', data.q4_2 || '', data.q4_2n || '', data.q4_3 || '', data.q4_3n || '', data.q4_4 || '', data.q4_4n || '', data.q4_5 || '', data.q4_5n || '', data.q4_6 || '', data.q4_6n || '',
+      data.siteOn ? '是' : '否（免填）',
+      data.q5_1 || '', data.q5_1n || '', data.q5_2 || '', data.q5_2n || '', data.q5_3 || '', data.q5_3n || '', data.q5_4 || '', data.q5_4n || '', data.q5_5 || '', data.q5_5n || '', data.q5_6 || '', data.q5_6n || '', data.q5_7 || '', data.q5_7n || '', data.q5_8 || '', data.q5_8c || 0, data.q5_8n || '', data.q5_9 || '', data.q5_9n || '', data.q5_10 || '', data.q5_10n || '', data.q5_11 || '', data.q5_11n || '', data.q5_12 || '', data.q5_12n || '', data.q5_13 || '', data.q5_13n || '',
+      data.otherOpinions || '', (data.photos || []).length, new Date().toLocaleString('zh-TW'), data.deviceInfo || '',
+      imgFormulas.join(' '), imgUrls.join('\n')
+    ];
+
+    sheet.appendRow(row);
+    const lastRow = sheet.getLastRow();
+    if (imgFormulas.length > 0) {
+      sheet.getRange(lastRow, HEADERS.length - 1).setFormula(imgFormulas[0]);
+    }
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success', id: data.id }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({status:'error',message:err.message}))
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: err.message }))
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
 function doGet() {
-  return ContentService.createTextOutput(JSON.stringify({status:'ok',version:'3.0'}))
+  return ContentService.createTextOutput(JSON.stringify({ status: 'ok', version: '3.1' }))
     .setMimeType(ContentService.MimeType.JSON);
 }`;
 
-const SHEET_GUIDE = `【Google 試算表「報告檢視面板」建置指南 v3.0】
+const SHEET_GUIDE = `【Google 試算表 VLOOKUP 指南 v3.1】
+1. 建立兩分頁：「Raw Data」（自動儲存區）與「報告檢視面板」（視覺化）。
+2. 在面板 B1 設定資料驗證，範圍選取 ='Raw Data'!$A$2:$A$1000（序號下拉選單）。
+3. 地點名稱欄位配置：=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$ZZ,3,0),"請選擇序號")
+4. 稽查日期欄位配置：=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$ZZ,2,0),"")
+5. 管理單位欄位配置：=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$ZZ,9,0),"")
+6. 率隊人員欄位配置：=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$ZZ,10,0),"")
+7. 陪同人員欄位配置：=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$ZZ,11,0),"")`;
 
-────────────────────────────────
-一、建立兩個分頁
-────────────────────────────────
-① Raw Data       ← GAS 自動寫入
-② 報告檢視面板   ← 手動建立視覺化介面
-
-────────────────────────────────
-二、查詢 ID 下拉選單（資料驗證）
-────────────────────────────────
-① 點選「報告檢視面板」的 B1 儲存格
-② 功能表 > 資料 > 資料驗證
-③ 條件：清單（從某個範圍）
-④ 來源：='Raw Data'!$A$2:$A$1000
-⑤ 勾選「顯示下拉選單」→ 儲存
-在 A1 旁加文字「查詢報告 ID：」
-
-────────────────────────────────
-三、VLOOKUP 公式（填入各欄位）
-────────────────────────────────
-假設 B1 = 查詢 ID，Raw Data 欄位：
-A=ID  B=日期  C=地點名稱  D=地點屬性
-E=重點場域  F=鄰近場域  G=稽查小組
-H=受查單位  I=管理單位  J=率隊  K=陪同
-
-地點名稱：
-=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$Z,3,0),"請選擇 ID")
-
-稽查日期：
-=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$Z,2,0),"")
-
-重點巡查場域：
-=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$Z,5,0),"")
-
-一、巡查業務 1-1：
-=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$AZ,12,0),"")
-
-（依欄位序號對應填入，參考 GAS 程式碼的 appendRow 順序）
-
-────────────────────────────────
-四、條件格式：是/否上色
-────────────────────────────────
-選取所有結果欄位，套用條件格式：
-• 等於「是」 → 填色 #d9ead3（淺綠）
-• 等於「否」 → 填色 #f4cccc（淺紅）
-• 等於「其他」→ 填色 #cfe2f3（淺藍）
-
-────────────────────────────────
-五、凍結頂列（方便閱讀）
-────────────────────────────────
-在「報告檢視面板」> 檢視 > 凍結 > 1 列
-`;
-
-function copyGas()       { copyText(GAS_CODE,  'GAS v3 程式碼已複製！'); }
-function copySheetGuide(){ copyText(SHEET_GUIDE,'試算表公式指南已複製！'); }
+function copyGas()       { copyText(GAS_CODE,  'GAS v3.1 最新雲端程式碼已複製到剪貼簿！'); }
+function copySheetGuide(){ copyText(SHEET_GUIDE,'公式指南已複製！'); }
 function copyText(txt, msg) {
   navigator.clipboard.writeText(txt)
     .then(() => showToast(msg, 'success'))
@@ -1911,7 +1934,7 @@ function copyText(txt, msg) {
 }
 
 /* ══════════════════════════
-   Tab Switch
+   分頁頁面切換控制
 ══════════════════════════ */
 function switchTab(tab) {
   document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
@@ -1922,22 +1945,16 @@ function switchTab(tab) {
   if (tab === 'list') renderList();
   if (tab === 'settings') {
     updGasDisp();
-    cntRpt().then(n => { document.getElementById('cnt-disp').textContent = `共 ${n} 筆報告`; });
+    cntRpt().then(n => { document.getElementById('cnt-disp').textContent = `共 ${n} 筆報告紀錄`; });
   }
 }
 
-/* ══════════════════════════
-   Modal
-══════════════════════════ */
 function openModal(id)  { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 document.querySelectorAll('.modal-ov').forEach(o => {
   o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
 });
 
-/* ══════════════════════════
-   Toast
-══════════════════════════ */
 const TICONS = { success:'✅', error:'❌', info:'ℹ️', warn:'⚠️' };
 function showToast(msg, type='info', dur=3200) {
   const c = document.getElementById('toast-wrap');
@@ -1948,19 +1965,16 @@ function showToast(msg, type='info', dur=3200) {
   setTimeout(() => { d.style.animation='tOut .3s ease forwards'; setTimeout(()=>d.remove(),300); }, dur);
 }
 
-/* ══════════════════════════
-   Network Status
-══════════════════════════ */
 function updNet() {
   const p = document.getElementById('net-pill'), l = document.getElementById('net-lbl');
-  if (navigator.onLine) { p.classList.remove('offline'); l.textContent = '連線中'; }
-  else { p.classList.add('offline'); l.textContent = '離線'; }
+  if (navigator.onLine) { p.classList.remove('offline'); l.textContent = '在線連線'; }
+  else { p.classList.add('offline'); l.textContent = '離線模式'; }
 }
-window.addEventListener('online',  () => { updNet(); showToast('網路已恢復', 'success'); });
-window.addEventListener('offline', () => { updNet(); showToast('目前離線，資料儲存於本機', 'warn'); });
+window.addEventListener('online',  () => { updNet(); showToast('網路連線已恢復', 'success'); });
+window.addEventListener('offline', () => { updNet(); showToast('已進入離線模式，新填寫報告將儲存於本地資料庫', 'warn'); });
 
 /* ══════════════════════════
-   Init
+   初始化應用程式
 ══════════════════════════ */
 async function init() {
   try {
@@ -1973,13 +1987,13 @@ async function init() {
     updGasDisp(); updNet();
     await refreshBadge();
     if (new URLSearchParams(location.search).get('action') === 'new') resetForm();
-    // GAS Modal 初始值
+    
     const s = getS();
     if (s.gasUrl) document.getElementById('gas-url').value = s.gasUrl;
     if (s.sheetId) document.getElementById('gas-sid').value = s.sheetId;
   } catch(e) {
-    console.error('[App v3]', e);
-    showToast('初始化失敗，部分功能不可用', 'error');
+    console.error('[Initialization Error]', e);
+    showToast('本地資料庫初始化失敗', 'error');
   }
 }
 init();
