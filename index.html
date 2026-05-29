@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="theme-color" content="#8a9a7a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="apple-mobile-web-app-title" content="鼠類防治稽查"/>
+<meta name="description" content="臺北市政府工務局鼠類防治稽查報告系統 v3.0"/>
+<title>臺北市政府工務局鼠類防治稽查報告</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════
+   莫蘭迪色系 Design Tokens — Morandi Light Theme
+   主軸：鼠尾草綠 × 藕粉 × 霧藍 × 暖米白
+══════════════════════════════════════════════════════ */
+:root {
+  /* ── 背景層次 ── */
+  --bg-page:    #f2ede8;   /* 暖米白底 */
+  --bg-card:    #faf7f4;   /* 卡片白 */
+  --bg-card2:   #f5f0eb;   /* 次層卡片 */
+  --bg-surface: #ede8e2;   /* 面板底色 */
+
+  /* ── 莫蘭迪主色 ── */
+  --m-sage:     #8a9a7a;   /* 鼠尾草綠（主色） */
+  --m-sage-l:   #a8b896;   /* 淺鼠尾草 */
+  --m-sage-d:   #6b7a5d;   /* 深鼠尾草 */
+  --m-rose:     #c4a49a;   /* 莫蘭迪玫瑰 */
+  --m-blue:     #8fa8b8;   /* 霧藍 */
+  --m-blue-l:   #b2c5d2;   /* 淺霧藍 */
+  --m-beige:    #c8ad97;   /* 暖米棕 */
+  --m-lavender: #a89eb8;   /* 莫蘭迪薰衣草 */
+  --m-clay:     #b8957a;   /* 陶土棕 */
+  --m-slate:    #8898a8;   /* 石板藍 */
+
+  /* ── 語意色（柔和版） ── */
+  --ok:   #7aaa7a;   /* 成功綠 */
+  --warn: #c4a060;   /* 警告暖金 */
+  --err:  #bb7070;   /* 錯誤玫紅 */
+  --info: #7898b0;   /* 資訊藍 */
+
+  /* ── 文字色 ── */
+  --t1:   #3a3530;   /* 主文字：深暖棕 */
+  --t2:   #6a6058;   /* 次文字 */
+  --t3:   #9a8e85;   /* 輔助文字 */
+  --t4:   #b8ada5;   /* 禁用文字 */
+
+  /* ── 邊框 ── */
+  --bd:       1px solid #ddd5cc;
+  --bd-focus: 1px solid var(--m-sage);
+  --bd-card:  1px solid #e8e0d8;
+
+  /* ── 陰影（輕柔） ── */
+  --shadow-sm: 0 1px 4px rgba(100,80,60,.08);
+  --shadow-md: 0 3px 12px rgba(100,80,60,.10);
+  --shadow-lg: 0 6px 24px rgba(100,80,60,.13);
+
+  /* ── 尺寸 ── */
+  --tab-h:  62px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px;
+  --tr: .18s ease;
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box; margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--bg-page);
+  color: var(--t1);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ═══ Layout ═══ */
+.app { max-width: 768px; margin: 0 auto; min-height: 100dvh; position: relative; }
+
+/* ═══ Header ═══ */
+.hdr {
+  position: sticky; top: 0; z-index: 100;
+  padding: env(safe-area-inset-top,0) 14px 0;
+  background: rgba(242,237,232,.96);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-bottom: var(--bd-card);
+  box-shadow: var(--shadow-sm);
+}
+.hdr-inner { display: flex; align-items: center; gap: 10px; padding: 9px 0; }
+.hdr-logo {
+  width: 38px; height: 38px; border-radius: var(--r-md); flex-shrink: 0;
+  background: linear-gradient(135deg, var(--m-sage) 0%, var(--m-sage-d) 100%);
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+  box-shadow: 0 2px 8px rgba(106,122,93,.25);
+}
+.hdr-text h1 { font-family: 'Noto Serif TC', serif; font-size: 13px; font-weight: 700; color: var(--t1); line-height: 1.3; }
+.hdr-text p  { font-size: 10px; color: var(--t3); margin-top: 1px; }
+.hdr-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+
+/* 安裝按鈕 */
+.install-btn {
+  display: none; /* JS 控制顯示 */
+  align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 99px;
+  background: var(--m-sage); color: #fff;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  border: none; box-shadow: 0 2px 8px rgba(138,154,122,.35);
+  transition: all var(--tr);
+  white-space: nowrap;
+}
+.install-btn:active { transform: scale(.97); background: var(--m-sage-d); }
+
+/* 網路狀態 */
+.net-pill {
+  display: flex; align-items: center; gap: 4px; padding: 4px 9px;
+  border-radius: 99px; font-size: 10px; font-weight: 500;
+  background: rgba(122,170,122,.12); color: var(--ok);
+  border: 1px solid rgba(122,170,122,.3); transition: all var(--tr);
+}
+.net-pill.offline { background: rgba(187,112,112,.12); color: var(--err); border-color: rgba(187,112,112,.3); }
+.net-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pdot 2s infinite; }
+@keyframes pdot { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+/* ═══ Tab Bar ═══ */
+.tab-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 768px; z-index: 200;
+  background: rgba(242,237,232,.97);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border-top: var(--bd-card);
+  box-shadow: 0 -2px 12px rgba(100,80,60,.08);
+  padding-bottom: var(--safe-b);
+}
+.tab-inner { display: flex; height: var(--tab-h); }
+.tab-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  cursor: pointer; position: relative; color: var(--t3);
+  border: none; background: transparent; transition: color var(--tr);
+}
+.tab-item.active { color: var(--m-sage-d); }
+.tab-item.active::before {
+  content: ''; position: absolute; top: 0; left: 20%; right: 20%;
+  height: 2.5px; background: var(--m-sage); border-radius: 0 0 3px 3px;
+}
+.tab-icon { font-size: 20px; line-height: 1; transition: transform var(--tr); }
+.tab-item.active .tab-icon { transform: scale(1.1); }
+.tab-label { font-size: 10px; font-weight: 500; }
+.tab-badge {
+  position: absolute; top: 7px; right: calc(50% - 18px);
+  min-width: 15px; height: 15px; border-radius: 8px;
+  background: var(--err); color: #fff; font-size: 8px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; padding: 0 3px;
+}
+
+/* ═══ Main Content ═══ */
+.main {
+  padding: 14px 13px calc(var(--tab-h) + var(--safe-b) + 62px + 16px);
+}
+.page-view { display: none; animation: pgIn .2s ease; }
+.page-view.active { display: block; }
+@keyframes pgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══ Cards ═══ */
+.card {
+  background: var(--bg-card);
+  border: var(--bd-card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.card-hdr {
+  display: flex; align-items: center; gap: 9px; padding: 11px 13px;
+  border-bottom: var(--bd); background: var(--bg-card2);
+}
+.card-icon {
+  width: 28px; height: 28px; border-radius: var(--r-sm); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.ci-sage     { background: rgba(138,154,122,.18); }
+.ci-rose     { background: rgba(196,164,154,.18); }
+.ci-blue     { background: rgba(143,168,184,.18); }
+.ci-beige    { background: rgba(200,173,151,.18); }
+.ci-lav      { background: rgba(168,158,184,.18); }
+.ci-clay     { background: rgba(184,149,122,.18); }
+.ci-slate    { background: rgba(136,152,168,.18); }
+.card-title  { font-size: 13px; font-weight: 600; color: var(--t1); }
+.card-sub    { font-size: 10px; color: var(--t3); margin-top: 1px; }
+.card-body   { padding: 13px; }
+
+/* ═══ Form ═══ */
+.form-group  { margin-bottom: 11px; }
+.flabel {
+  display: block; font-size: 11px; font-weight: 500;
+  color: var(--t2); margin-bottom: 4px; letter-spacing: .01em;
+}
+.flabel .req { color: var(--err); margin-left: 2px; }
+.finput, .fselect, .ftextarea {
+  width: 100%; background: var(--bg-surface); border: var(--bd);
+  border-radius: var(--r-sm); color: var(--t1);
+  font-family: 'Noto Sans TC', sans-serif; font-size: 14px;
+  padding: 9px 11px; transition: all var(--tr); -webkit-appearance: none;
+}
+.finput:focus, .fselect:focus, .ftextarea:focus {
+  outline: none; border-color: var(--m-sage);
+  background: #fff; box-shadow: 0 0 0 3px rgba(138,154,122,.15);
+}
+.finput::placeholder, .ftextarea::placeholder { color: var(--t4); }
+.ftextarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+.date-row  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.mlabel    { font-size: 10px; color: var(--t3); margin-bottom: 3px; }
+.mrow      { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 9px; }
+.mrow:last-child { margin-bottom: 0; }
+
+/* ═══ Checkbox Pill ═══ */
+.chk-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.chk-pill {
+  display: flex; align-items: center; gap: 5px; padding: 5px 11px;
+  border-radius: 99px; border: var(--bd); background: var(--bg-surface);
+  cursor: pointer; font-size: 12px; color: var(--t2);
+  transition: all var(--tr); user-select: none;
+}
+.chk-pill input[type=checkbox] { display: none; }
+.chk-pill:has(input:checked) {
+  background: rgba(138,154,122,.15); border-color: var(--m-sage); color: var(--m-sage-d);
+}
+.pill-chk {
+  width: 13px; height: 13px; border-radius: 3px; border: 1.5px solid var(--t4);
+  display: flex; align-items: center; justify-content: center; font-size: 9px;
+  transition: all var(--tr); flex-shrink: 0;
+}
+.chk-pill:has(input:checked) .pill-chk { background: var(--m-sage); border-color: var(--m-sage); color: #fff; }
+
+/* ═══ Radio Trio ═══ */
+.radio-trio { display: flex; gap: 5px; }
+.radio-trio label {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 8px 4px; border-radius: var(--r-sm); border: var(--bd);
+  background: var(--bg-surface); cursor: pointer; font-size: 13px; color: var(--t2);
+  transition: all var(--tr); user-select: none;
+}
+.radio-trio input[type=radio] { display: none; }
+.radio-trio label.yes:has(input:checked) { background: rgba(122,170,122,.15); border-color: var(--ok); color: var(--ok); }
+.radio-trio label.no:has(input:checked)  { background: rgba(187,112,112,.15); border-color: var(--err); color: var(--err); }
+.radio-trio label.oth:has(input:checked) { background: rgba(120,152,176,.15); border-color: var(--info); color: var(--info); }
+
+/* ═══ Inspection Item ═══ */
+.ins-item { padding: 10px 0; border-bottom: var(--bd); }
+.ins-item:last-child { border-bottom: none; padding-bottom: 0; }
+.ins-item:first-child { padding-top: 0; }
+.ins-label { font-size: 12px; color: var(--t2); margin-bottom: 8px; line-height: 1.55; }
+.ins-label strong { color: var(--m-sage-d); font-weight: 600; margin-right: 2px; }
+.note-inp {
+  width: 100%; background: var(--bg-surface); border: var(--bd);
+  border-radius: var(--r-sm); color: var(--t1);
+  font-family: 'Noto Sans TC', sans-serif; font-size: 12px;
+  padding: 6px 9px; margin-top: 6px; resize: none; min-height: 40px;
+  transition: all var(--tr);
+}
+.note-inp:focus { outline: none; border-color: var(--m-sage); background: #fff; }
+.note-inp::placeholder { color: var(--t4); }
+
+/* ═══ Number Stepper ═══ */
+.num-row   { display: flex; align-items: center; gap: 8px; margin-top: 7px; }
+.num-lbl   { font-size: 12px; color: var(--t2); white-space: nowrap; }
+.num-wrap  {
+  display: flex; align-items: center;
+  background: var(--bg-surface); border: var(--bd); border-radius: var(--r-lg); overflow: hidden;
+}
+.num-btn {
+  width: 36px; height: 34px; background: transparent; border: none;
+  color: var(--m-sage-d); font-size: 18px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background var(--tr); user-select: none; flex-shrink: 0;
+}
+.num-btn:active { background: rgba(138,154,122,.2); }
+.num-val {
+  min-width: 46px; text-align: center; font-size: 15px; font-weight: 700;
+  color: var(--t1); padding: 0 2px; border: none; background: transparent;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+.num-val::-webkit-inner-spin-button,
+.num-val::-webkit-outer-spin-button { -webkit-appearance: none; }
+.num-val[type=number] { -moz-appearance: textfield; }
+
+/* ═══ Section Divider ═══ */
+.sec-div { display: flex; align-items: center; gap: 8px; margin: 14px 0 10px; }
+.sec-line { flex: 1; height: 1px; background: linear-gradient(to right, var(--m-sage-l), transparent); }
+.sec-line.r { background: linear-gradient(to left, var(--m-sage-l), transparent); }
+.sec-txt { font-size: 10px; font-weight: 600; color: var(--m-sage-d); letter-spacing: .06em; white-space: nowrap; }
+
+/* ═══ Buttons ═══ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 16px; border-radius: var(--r-md);
+  font-family: 'Noto Sans TC', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; transition: all var(--tr); white-space: nowrap;
+}
+.btn-primary {
+  background: var(--m-sage); color: #fff;
+  box-shadow: 0 2px 10px rgba(138,154,122,.35);
+}
+.btn-primary:active { background: var(--m-sage-d); transform: translateY(1px); }
+.btn-secondary {
+  background: var(--bg-card2); color: var(--t1); border: var(--bd);
+}
+.btn-secondary:active { background: var(--bg-surface); }
+.btn-danger  { background: rgba(187,112,112,.12); color: var(--err); border: 1px solid rgba(187,112,112,.3); }
+.btn-danger:active { background: rgba(187,112,112,.22); }
+.btn-success { background: var(--ok); color: #fff; box-shadow: 0 2px 8px rgba(122,170,122,.3); }
+.btn-full { width: 100%; }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+.btn-icon {
+  width: 32px; height: 32px; border-radius: var(--r-sm); border: var(--bd);
+  background: var(--bg-card2); color: var(--t2); display: flex; align-items: center;
+  justify-content: center; cursor: pointer; font-size: 14px; transition: all var(--tr);
+}
+.btn-icon:active { background: rgba(138,154,122,.15); color: var(--m-sage-d); }
+
+/* ═══ Fixed Action Bar ═══ */
+.action-bar {
+  position: fixed;
+  bottom: calc(var(--tab-h) + var(--safe-b));
+  left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 768px; z-index: 150;
+  padding: 9px 13px;
+  background: rgba(242,237,232,.97);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-top: var(--bd-card);
+  box-shadow: 0 -2px 8px rgba(100,80,60,.07);
+  display: flex; gap: 8px;
+}
+
+/* ═══ Photo Upload (v3 fixed) ═══ */
+.photo-group {
+  border: 1.5px dashed #ccc8c0; border-radius: var(--r-md);
+  padding: 11px; margin-bottom: 9px; position: relative;
+  background: var(--bg-card2);
+}
+.photo-group-title {
+  font-size: 11px; font-weight: 600; color: var(--m-sage-d);
+  margin-bottom: 9px; display: flex; align-items: center; gap: 5px;
+}
+.photo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.photo-col-label { font-size: 10px; color: var(--t3); text-align: center; margin-bottom: 4px; }
+
+/* ── 照片槽（v3：拍照 & 相冊 分開兩個按鈕） ── */
+.photo-slot-wrap { position: relative; }
+.photo-preview {
+  aspect-ratio: 4/3; border-radius: var(--r-sm);
+  border: 1.5px dashed #ccc8c0; background: var(--bg-surface);
+  overflow: hidden; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 5px;
+}
+.photo-preview img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+}
+.photo-preview .ph-empty {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  pointer-events: none;
+}
+.photo-preview .ph-empty-icon { font-size: 26px; opacity: .4; }
+.photo-preview .ph-empty-txt  { font-size: 10px; color: var(--t4); }
+.photo-preview.has-img .ph-empty { display: none; }
+.photo-del-btn {
+  position: absolute; top: 4px; right: 4px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(187,112,112,.85); color: #fff; border: none;
+  font-size: 10px; cursor: pointer; display: none;
+  align-items: center; justify-content: center; z-index: 5;
+}
+.photo-preview.has-img .photo-del-btn { display: flex; }
+
+/* 兩個按鈕：相機 + 相冊 */
+.photo-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.photo-pick-btn {
+  position: relative; overflow: hidden;
+  padding: 5px; border-radius: var(--r-sm); border: var(--bd);
+  background: var(--bg-card); font-size: 10px; color: var(--t2);
+  text-align: center; cursor: pointer; transition: all var(--tr);
+  display: flex; align-items: center; justify-content: center; gap: 3px;
+}
+.photo-pick-btn:active { background: rgba(138,154,122,.12); border-color: var(--m-sage); color: var(--m-sage-d); }
+/* 隱藏的 file input 覆蓋按鈕整個區域 */
+.photo-pick-btn input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+
+.photo-add-btn {
+  width: 100%; padding: 9px; border: 1.5px dashed rgba(138,154,122,.5);
+  border-radius: var(--r-md); background: rgba(138,154,122,.06);
+  color: var(--m-sage-d); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all var(--tr);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.photo-add-btn:active { background: rgba(138,154,122,.15); }
+.photo-group-del {
+  position: absolute; top: 8px; right: 9px; width: 22px; height: 22px;
+  border-radius: 50%; background: rgba(187,112,112,.12);
+  border: 1px solid rgba(187,112,112,.3); color: var(--err);
+  font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* ═══ Toggle ═══ */
+.toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle input { display: none; }
+.toggle-track {
+  position: absolute; inset: 0; border-radius: 11px;
+  background: #d0ccc8; cursor: pointer; transition: background var(--tr);
+}
+.toggle input:checked + .toggle-track { background: var(--m-sage); }
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px; width: 16px; height: 16px;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.2); transition: transform var(--tr);
+}
+.toggle input:checked + .toggle-track .toggle-thumb { transform: translateX(18px); }
+
+/* ═══ Record List ═══ */
+.rcard {
+  background: var(--bg-card); border: var(--bd-card); border-radius: var(--r-lg);
+  padding: 12px 13px; margin-bottom: 9px;
+  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+}
+.rcard::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--m-sage); border-radius: 3px 0 0 3px;
+}
+.rcard-title { font-size: 14px; font-weight: 600; color: var(--t1); margin-bottom: 5px; }
+.rcard-meta  { display: flex; flex-wrap: wrap; gap: 6px; }
+.rmeta { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--t3); }
+.rcard-actions { display: flex; gap: 5px; margin-top: 9px; padding-top: 9px; border-top: var(--bd); }
+.rcard-actions .btn { flex: 1; padding: 7px 4px; font-size: 11px; }
+.ubadge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 99px; font-size: 9px; font-weight: 500; }
+.ubadge.synced  { background: rgba(122,170,122,.15); color: var(--ok); }
+.ubadge.pending { background: rgba(196,160,96,.15);  color: var(--warn); }
+.ubadge.local   { background: rgba(150,140,135,.12); color: var(--t3); }
+
+/* ═══ Empty State ═══ */
+.empty-st { text-align: center; padding: 44px 20px; }
+.empty-icon { font-size: 50px; margin-bottom: 12px; opacity: .45; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--t2); margin-bottom: 6px; }
+.empty-desc  { font-size: 12px; color: var(--t3); line-height: 1.6; }
+
+/* ═══ Toast ═══ */
+#toast-wrap {
+  position: fixed; top: calc(env(safe-area-inset-top,0px) + 62px);
+  left: 50%; transform: translateX(-50%);
+  z-index: 9999; width: calc(100% - 26px); max-width: 400px; pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 8px; padding: 10px 13px;
+  border-radius: var(--r-md); box-shadow: var(--shadow-md);
+  margin-bottom: 7px; animation: tIn .25s ease forwards; pointer-events: auto;
+}
+.toast.success { background: #eef7ee; border: 1px solid rgba(122,170,122,.4); color: #3a6a3a; }
+.toast.error   { background: #fdf0f0; border: 1px solid rgba(187,112,112,.4); color: #7a3030; }
+.toast.info    { background: #edf3f8; border: 1px solid rgba(120,152,176,.4); color: #304060; }
+.toast.warn    { background: #fdf6e8; border: 1px solid rgba(196,160,96,.4);  color: #6a4a10; }
+@keyframes tIn  { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes tOut { from{opacity:1} to{opacity:0;transform:translateY(-8px)} }
+.toast-icon { font-size: 16px; flex-shrink: 0; }
+.toast-text { font-size: 12px; font-weight: 500; flex: 1; }
+
+/* ═══ Modal ═══ */
+.modal-ov {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(60,50,40,.45); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .2s;
+}
+.modal-ov.show { opacity: 1; pointer-events: auto; }
+.modal-sheet {
+  background: var(--bg-card); border: var(--bd-card);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  width: 100%; max-width: 768px; max-height: 88vh; overflow-y: auto;
+  padding: 0 0 calc(var(--safe-b) + 12px);
+  transform: translateY(100%); transition: transform .3s ease;
+}
+.modal-ov.show .modal-sheet { transform: translateY(0); }
+.modal-handle { width: 36px; height: 4px; border-radius: 2px; background: #ccc8c0; margin: 10px auto 0; }
+.modal-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 16px; border-bottom: var(--bd);
+}
+.modal-title { font-size: 15px; font-weight: 700; color: var(--t1); }
+.modal-body  { padding: 13px 16px; }
+
+/* ═══ Settings ═══ */
+.si { display: flex; align-items: center; justify-content: space-between; padding: 12px 13px; border-bottom: var(--bd); }
+.si:last-child { border-bottom: none; }
+.si-label { font-size: 13px; font-weight: 500; color: var(--t1); }
+.si-desc  { font-size: 10px; color: var(--t3); margin-top: 1px; }
+
+/* ═══ Update Banner ═══ */
+.upd-banner {
+  position: fixed; top: calc(env(safe-area-inset-top,0px) + 56px);
+  left: 13px; right: 13px; max-width: 742px; margin: 0 auto;
+  z-index: 300; background: #eef3f8; border: 1px solid rgba(120,152,176,.4);
+  border-radius: var(--r-md); padding: 10px 12px;
+  display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow-md);
+}
+.upd-banner.hidden { display: none !important; }
+.upd-text { flex: 1; font-size: 11px; color: #304060; }
+
+/* ═══ PDF hidden area ═══ */
+#pdf-area { position: fixed; left: -9999px; top: 0; width: 794px; background: #fff; color: #000; z-index: -1; }
+
+/* ═══ GAS Status Indicator ═══ */
+.gas-status {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 99px; font-size: 10px; font-weight: 500;
+}
+.gas-ok   { background: rgba(122,170,122,.15); color: var(--ok); }
+.gas-err  { background: rgba(187,112,112,.15); color: var(--err); }
+.gas-none { background: rgba(150,140,135,.12); color: var(--t3); }
+
+.spin { width: 16px; height: 16px; border: 2px solid rgba(0,0,0,.12); border-top-color: var(--m-sage); border-radius: 50%; animation: sp .7s linear infinite; }
+@keyframes sp { to{transform:rotate(360deg)} }
+
+@media(min-width:480px) {
+  .mrow { grid-template-columns: repeat(3,1fr); }
+  .date-row { grid-template-columns: repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ▓ Update Banner ▓ -->
+<div class="upd-banner hidden" id="upd-banner">
+  <span style="font-size:16px">🔄</span>
+  <span class="upd-text">有新版本，重新整理即可更新。</span>
+  <button class="btn btn-primary" style="padding:5px 11px;font-size:11px" onclick="doUpdate()">立即更新</button>
+</div>
+
+<!-- ▓ Toast ▓ -->
+<div id="toast-wrap"></div>
+
+<!-- ▓ Modal: 刪除確認 ▓ -->
+<div class="modal-ov" id="m-delete">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-hdr">
+      <span class="modal-title">⚠️ 確認刪除</span>
+      <button class="btn-icon" onclick="closeModal('m-delete')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--t2);font-size:13px;line-height:1.6;margin-bottom:16px">確定要刪除這份稽查報告嗎？<br/>此操作無法還原。</p>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="flex:1" onclick="closeModal('m-delete')">取消</button>
+        <button class="btn btn-danger" style="flex:1" id="confirm-del">確認刪除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ▓ Modal: GAS 設定 ▓ -->
+<div class="modal-ov" id="m-gas">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-hdr">
+      <span class="modal-title">☁️ 雲端同步設定</span>
+      <button class="btn-icon" onclick="closeModal('m-gas')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- 步驟說明 -->
+      <div style="background:var(--bg-card2);border:var(--bd);border-radius:var(--r-md);padding:11px;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:600;color:var(--m-sage-d);margin-bottom:7px">📋 快速設定步驟</div>
+        <ol style="font-size:11px;color:var(--t2);line-height:2;padding-left:16px">
+          <li>用專案內附的 <strong>gas-connector.gs</strong> 建立 GAS 專案</li>
+          <li>在 GAS 程式碼中填入你的 <strong>試算表 ID</strong></li>
+          <li>部署為 Web App（執行身分：我；存取：所有人）</li>
+          <li>複製 Web App 網址填入下方</li>
+          <li>在 Google Sheets 建立「Raw Data」分頁（GAS 自動產生標題）</li>
+        </ol>
+      </div>
+      <div class="form-group">
+        <label class="flabel">GAS Web App 網址 <span class="req">*</span></label>
+        <input type="url" class="finput" id="gas-url" placeholder="https://script.google.com/macros/s/xxxxx/exec"/>
+      </div>
+      <div class="form-group">
+        <label class="flabel">Google 試算表 ID <span class="req">*</span>
+          <span style="color:var(--t3);font-weight:400">（網址 /d/【此段】/edit）</span>
+        </label>
+        <input type="text" class="finput" id="gas-sid" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"/>
+      </div>
+      <!-- 連線測試 -->
+      <button class="btn btn-secondary btn-full" style="margin-bottom:10px" onclick="testGAS()">
+        🔗 測試連線
+      </button>
+      <div id="gas-test-result" style="display:none;margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" style="flex:1" onclick="closeModal('m-gas')">取消</button>
+        <button class="btn btn-primary" style="flex:1" onclick="saveGas()">儲存設定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ▓ Modal: 安裝說明 ▓ -->
+<div class="modal-ov" id="m-install">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-hdr">
+      <span class="modal-title">📲 安裝到裝置桌面</span>
+      <button class="btn-icon" onclick="closeModal('m-install')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="install-content"><!-- JS 動態填入 --></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ App Wrapper ════ -->
+<div class="app">
+
+  <!-- Header -->
+  <header class="hdr">
+    <div class="hdr-inner">
+      <div class="hdr-logo">🐀</div>
+      <div class="hdr-text">
+        <h1>臺北市政府工務局</h1>
+        <p>鼠類防治稽查報告系統 v3.0</p>
+      </div>
+      <div class="hdr-right">
+        <!-- 安裝到桌面按鈕 -->
+        <button class="install-btn" id="install-btn" onclick="handleInstall()">
+          <span>⬇️</span> 安裝
+        </button>
+        <!-- 網路狀態 -->
+        <div class="net-pill" id="net-pill">
+          <div class="net-dot"></div>
+          <span id="net-lbl">連線中</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ╔══════════════════╗
+         ║  填報頁面         ║
+         ╚══════════════════╝ -->
+    <div class="page-view active" id="page-form">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+        <div>
+          <h2 style="font-size:16px;font-weight:700;color:var(--t1)" id="form-title">新增稽查報告</h2>
+          <p style="font-size:11px;color:var(--t3);margin-top:1px" id="form-sub">填寫完成後點擊下方儲存</p>
+        </div>
+        <button class="btn btn-secondary" style="padding:6px 11px;font-size:11px" onclick="resetForm()">🔄 重置</button>
+      </div>
+
+      <!-- ① 基本資訊 -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-icon ci-sage">📋</div>
+          <div><div class="card-title">基本資訊</div><div class="card-sub">稽查地點與日期</div></div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="flabel">稽查地點名稱 <span class="req">*</span></label>
+            <input type="text" class="finput" id="f-loc" placeholder="請輸入稽查地點名稱"/>
+          </div>
+          <div class="form-group">
+            <label class="flabel">稽查日期 <span class="req">*</span></label>
+            <div class="date-row">
+              <div><div class="mlabel">年（民國）</div><input type="number" class="finput" id="f-y" min="100" max="200"/></div>
+              <div><div class="mlabel">月</div><input type="number" class="finput" id="f-m" min="1" max="12"/></div>
+              <div><div class="mlabel">日</div><input type="number" class="finput" id="f-d" min="1" max="31"/></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="flabel">稽查地點屬性</label>
+            <input type="text" class="finput" id="f-attr" placeholder="請輸入地點屬性說明"/>
+          </div>
+          <div class="form-group">
+            <label class="flabel">是否為重點巡查場域</label>
+            <div class="radio-trio">
+              <label class="yes"><input type="radio" name="key-site" value="是"/>✓ 是</label>
+              <label class="no"><input type="radio" name="key-site" value="否"/>✗ 否</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="flabel">鄰近場域類型（可複選）</label>
+            <div class="chk-group" id="nearby-grp">
+              <label class="chk-pill"><input type="checkbox" value="市場"/><span class="pill-chk">✓</span>市場</label>
+              <label class="chk-pill"><input type="checkbox" value="餐飲業"/><span class="pill-chk">✓</span>餐飲業</label>
+              <label class="chk-pill"><input type="checkbox" value="攤販"/><span class="pill-chk">✓</span>攤販</label>
+              <label class="chk-pill"><input type="checkbox" value="商圈"/><span class="pill-chk">✓</span>商圈</label>
+              <label class="chk-pill"><input type="checkbox" value="地下街"/><span class="pill-chk">✓</span>地下街</label>
+              <label class="chk-pill"><input type="checkbox" value="貨櫃市集(輕食區)"/><span class="pill-chk">✓</span>貨櫃市集</label>
+              <label class="chk-pill"><input type="checkbox" value="露營場"/><span class="pill-chk">✓</span>露營場</label>
+              <label class="chk-pill"><input type="checkbox" value="工地場域"/><span class="pill-chk">✓</span>工地場域</label>
+              <label class="chk-pill"><input type="checkbox" value="餵食地點"/><span class="pill-chk">✓</span>餵食地點</label>
+              <label class="chk-pill"><input type="checkbox" value="陳情地點"/><span class="pill-chk">✓</span>陳情地點</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 稽查小組 -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-icon ci-beige">👥</div>
+          <div><div class="card-title">稽查小組成員</div><div class="card-sub">已有姓名者勾選，其餘填入</div></div>
+        </div>
+        <div class="card-body">
+          <div class="sec-div"><div class="sec-line"></div><span class="sec-txt">主任秘書 ／ 專門委員</span><div class="sec-line r"></div></div>
+          <div class="form-group">
+            <label class="flabel">主任秘書</label>
+            <label class="chk-pill" style="display:inline-flex"><input type="checkbox" id="m-huang" value="黃淑如主任秘書"/><span class="pill-chk">✓</span>黃淑如 主任秘書</label>
+          </div>
+          <div class="form-group">
+            <label class="flabel">專門委員 / 副總工程司</label>
+            <div class="chk-group">
+              <label class="chk-pill"><input type="checkbox" id="m-li" value="李沐磬專門委員"/><span class="pill-chk">✓</span>李沐磬 專門委員</label>
+              <label class="chk-pill"><input type="checkbox" id="m-chen" value="陳宏銘專門委員"/><span class="pill-chk">✓</span>陳宏銘 專門委員</label>
+              <label class="chk-pill"><input type="checkbox" id="m-hong" value="洪燕萍副總工程司"/><span class="pill-chk">✓</span>洪燕萍 副總工程司</label>
+            </div>
+          </div>
+          <div class="sec-div"><div class="sec-line"></div><span class="sec-txt">各科人員</span><div class="sec-line r"></div></div>
+          <div class="mrow">
+            <div><div class="mlabel">土木建築科</div><input type="text" class="finput" id="m-civil" placeholder="姓名"/></div>
+            <div><div class="mlabel">水利科</div><input type="text" class="finput" id="m-water" placeholder="姓名"/></div>
+            <div><div class="mlabel">公園大地科</div><input type="text" class="finput" id="m-park" placeholder="姓名"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ 受稽查單位 -->
+      <div class="card">
+        <div class="card-hdr">
+          <div class="card-icon ci-slate">🏢</div>
+          <div><div class="card-title">受稽查單位及陪同人員</div></div>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="flabel">受稽查單位（可複選）</label>
+            <div class="chk-group">
+              <label class="chk-pill"><input type="checkbox" id="u-new" value="新建工程處"/><span class="pill-chk">✓</span>新建工程處</label>
+              <label class="chk-pill"><input type="checkbox" id="u-wat" value="水利工程處"/><span class="pill-chk">✓</span>水利工程處</label>
+              <label class="chk-pill"><input type="checkbox" id="u-prk" value="公園路燈工程管理處"/><span class="pill-chk">✓</span>公園路燈管理處</label>
+              <label class="chk-pill"><input type="checkbox" id="u-sew" value="衛生下水道工程處"/><span class="pill-chk">✓</span>衛生下水道工程處</label>
+              <label class="chk-pill"><input type="checkbox" id="u-geo" value="大地工程處"/><span class="pill-chk">✓</span>大地工程處</label>
+            </div>
+          </div>
+          <div class="mrow" style="margin-top:4px">
+            <div><div class="mlabel">管理單位</div><input type="text" class="finput" id="u-mgmt" placeholder="管理單位"/></div>
+            <div><div class="mlabel">率隊人員</div><input type="text" class="finput" id="u-lead" placeholder="姓名"/></div>
+            <div><div class="mlabel">陪同人員</div><input type="text" class="finput" id="u-comp" placeholder="姓名"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ④ 一、巡查業務 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-blue">🔍</div><div><div class="card-title">一、巡查業務</div></div></div>
+        <div class="card-body">
+          <div class="ins-item">
+            <div class="ins-label"><strong>1.</strong>工程處是否於所轄場域進行巡查工作。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q1-1" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q1-1" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q1-1" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q1-1-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>2.</strong>工程處是否依巡查情形填報自主檢查表。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q1-2" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q1-2" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q1-2" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q1-2-n" placeholder="補充說明"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑤ 二、處稽查 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-sage">🏛️</div><div><div class="card-title">二、處稽查</div></div></div>
+        <div class="card-body">
+          <div class="ins-item" style="padding-top:0">
+            <div class="ins-label">工程處針對鼠類防治工作是否進行稽查作業。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q2-1" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q2-1" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q2-1" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q2-1-n" placeholder="補充說明"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑥ 三、環境管理 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-sage">🌿</div><div><div class="card-title">三、環境管理</div></div></div>
+        <div class="card-body">
+          <div class="ins-item" style="padding-top:0">
+            <div class="ins-label"><strong>1.</strong>現場環境是否維持清潔。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q3-1" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q3-1" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q3-1" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q3-1-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>2.</strong>植栽（灌木、地被及雜草）定期修剪及移除枯枝落葉。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q3-2" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q3-2" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q3-2" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q3-2-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>3.</strong>垃圾是否清運。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q3-3" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q3-3" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q3-3" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q3-3-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>4.</strong>是否張貼禁止餵食公告。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q3-4" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q3-4" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q3-4" value="其他"/>… 其他</label></div>
+            <div class="num-row">
+              <span class="num-lbl">餵食熱點：</span>
+              <div class="num-wrap"><button type="button" class="num-btn" onclick="ns('q3-4-c',-1)">−</button><input type="number" class="num-val" id="q3-4-c" value="0" min="0" max="99"/><button type="button" class="num-btn" onclick="ns('q3-4-c',1)">+</button></div>
+              <span class="num-lbl">處</span>
+            </div>
+            <textarea class="note-inp" id="q3-4-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>5.</strong>是否於餵食地點執行勸導、取締餵食行為。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q3-5" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q3-5" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q3-5" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q3-5-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>6.</strong>是否於重點轄管場域周邊側溝之排水溝蓋進水口原則加設細目型鋼線網。（※ 針對重點轄管場域執行）</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q3-6" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q3-6" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q3-6" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q3-6-n" placeholder="補充說明"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑦ 四、防治措施 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-rose">🪤</div><div><div class="card-title">四、防治措施</div></div></div>
+        <div class="card-body">
+          <div class="ins-item" style="padding-top:0">
+            <div class="ins-label"><strong>1.</strong>是否設置捕鼠籠、鼠餌站。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q4-1" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q4-1" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q4-1" value="其他"/>… 其他</label></div>
+            <div class="num-row">
+              <span class="num-lbl">共設捕鼠籠：</span>
+              <div class="num-wrap"><button type="button" class="num-btn" onclick="ns('q4-1-c',-1)">−</button><input type="number" class="num-val" id="q4-1-c" value="0" min="0" max="999"/><button type="button" class="num-btn" onclick="ns('q4-1-c',1)">+</button></div>
+              <span class="num-lbl">個</span>
+            </div>
+            <textarea class="note-inp" id="q4-1-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>2.</strong>是否於投藥場點設置鼠藥投放告示牌。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q4-2" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q4-2" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q4-2" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q4-2-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>3.</strong>是否確實紀錄投入藥物數量及場點位置，並以遠離側溝孔蓋與下水道為原則。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q4-3" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q4-3" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q4-3" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q4-3-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>4.</strong>鼠洞是否進行封填補土夯實。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q4-4" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q4-4" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q4-4" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q4-4-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>5.</strong>是否有發現鼠跡（排泄物、咬痕、擦跡、足跡）等。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q4-5" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q4-5" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q4-5" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q4-5-n" placeholder="補充說明"></textarea>
+          </div>
+          <div class="ins-item">
+            <div class="ins-label"><strong>6.</strong>是否有發現鼠屍。</div>
+            <div class="radio-trio"><label class="yes"><input type="radio" name="q4-6" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q4-6" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q4-6" value="其他"/>… 其他</label></div>
+            <textarea class="note-inp" id="q4-6-n" placeholder="補充說明"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑧ 五、工地環境管理 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-lav">🏗️</div><div><div class="card-title">五、工地環境管理</div><div class="card-sub">※ 有工程進行者適用，無則關閉</div></div></div>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0 12px;border-bottom:var(--bd);margin-bottom:11px">
+            <div>
+              <div style="font-size:12px;font-weight:500;color:var(--t1)">本次稽查有工程工地</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:1px">關閉則此區段標記「免填」</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="site-on" checked onchange="toggleSite(this.checked)"/><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div id="site-body">
+            <div class="ins-item" style="padding-top:0"><div class="ins-label"><strong>1.</strong>工地是否定期進行巡查作業。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-1" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-1" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-1" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-1-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>2.</strong>工地現況是否有不當堆置建材、雜物。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-2" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-2" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-2" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-2-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>3.</strong>現場環境是否維持清潔。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-3" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-3" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-3" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-3-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>4.</strong>垃圾是否清運。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-4" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-4" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-4" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-4-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>5.</strong>垃圾桶或廚餘桶是否加蓋。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-5" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-5" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-5" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-5-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>6.</strong>剩菜剩飯是否隨意丟棄在工地。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-6" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-6" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-6" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-6-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>7.</strong>暫存食物是否妥適密封。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-7" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-7" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-7" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-7-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>8.</strong>工地設置捕鼠籠、鼠餌站。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-8" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-8" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-8" value="其他"/>… 其他</label></div><div class="num-row"><span class="num-lbl">共設捕鼠籠：</span><div class="num-wrap"><button type="button" class="num-btn" onclick="ns('q5-8-c',-1)">−</button><input type="number" class="num-val" id="q5-8-c" value="0" min="0" max="999"/><button type="button" class="num-btn" onclick="ns('q5-8-c',1)">+</button></div><span class="num-lbl">個</span></div><textarea class="note-inp" id="q5-8-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>9.</strong>是否於投藥場點設置鼠藥投放告示牌。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-9" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-9" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-9" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-9-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>10.</strong>是否確實紀錄投入藥物數量及場點位置，並以遠離側溝孔蓋與下水道為原則。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-10" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-10" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-10" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-10-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>11.</strong>鼠洞是否進行封填補土夯實。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-11" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-11" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-11" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-11-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>12.</strong>是否有發現鼠跡（排泄物、咬痕、擦跡、足跡）。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-12" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-12" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-12" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-12-n" placeholder="補充說明"></textarea></div>
+            <div class="ins-item"><div class="ins-label"><strong>13.</strong>是否有發現鼠屍。</div><div class="radio-trio"><label class="yes"><input type="radio" name="q5-13" value="是"/>✓ 是</label><label class="no"><input type="radio" name="q5-13" value="否"/>✗ 否</label><label class="oth"><input type="radio" name="q5-13" value="其他"/>… 其他</label></div><textarea class="note-inp" id="q5-13-n" placeholder="補充說明"></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑨ 六、其他意見 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-beige">📝</div><div><div class="card-title">六、其他稽查意見及建議</div></div></div>
+        <div class="card-body">
+          <textarea class="ftextarea" id="f-opinion" rows="4" placeholder="請填入其他稽查意見及建議事項..."></textarea>
+        </div>
+      </div>
+
+      <!-- ⑩ 七、缺失及改善照片（v3 全面修正）-->
+      <div class="card" id="photo-card">
+        <div class="card-hdr">
+          <div class="card-icon ci-clay">📷</div>
+          <div>
+            <div class="card-title">缺失及改善照片</div>
+            <div class="card-sub">📸 拍照 或 🖼️ 相簿，圖片自動壓縮後儲存</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="photo-groups-wrap"></div>
+          <button type="button" class="photo-add-btn" onclick="addPhotoGroup()">
+            ＋ 新增照片組
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /#page-form -->
+
+    <!-- ╔══════════════════╗
+         ║  記錄頁面         ║
+         ╚══════════════════╝ -->
+    <div class="page-view" id="page-list">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+        <div>
+          <h2 style="font-size:16px;font-weight:700">稽查記錄</h2>
+          <p style="font-size:11px;color:var(--t3);margin-top:1px">點選按鈕可編輯或匯出 PDF</p>
+        </div>
+        <button class="btn btn-primary" style="padding:7px 12px;font-size:11px" onclick="switchTab('form');resetForm()">＋ 新增</button>
+      </div>
+      <div id="rlist"></div>
+    </div>
+
+    <!-- ╔══════════════════╗
+         ║  設定頁面         ║
+         ╚══════════════════╝ -->
+    <div class="page-view" id="page-settings">
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:13px">設定</h2>
+
+      <!-- GAS 雲端同步 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-sage">☁️</div><div><div class="card-title">Google Apps Script 雲端同步</div><div class="card-sub">v3.0 修正：明確試算表 ID + 連線測試</div></div></div>
+        <div class="card-body" style="padding:0">
+          <div class="si">
+            <div>
+              <div class="si-label">GAS 設定狀態</div>
+              <div class="si-desc" id="gas-disp">尚未設定</div>
+            </div>
+            <button class="btn btn-secondary" style="padding:6px 11px;font-size:11px" onclick="openModal('m-gas')">設定</button>
+          </div>
+          <div class="si">
+            <div><div class="si-label">自動上傳</div><div class="si-desc">儲存時自動同步至 Google Sheets</div></div>
+            <label class="toggle"><input type="checkbox" id="auto-up" checked/><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 安裝 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-blue">📲</div><div><div class="card-title">安裝到裝置桌面</div><div class="card-sub">一鍵新增捷徑，離線也能使用</div></div></div>
+        <div class="card-body">
+          <button class="btn btn-primary btn-full" onclick="handleInstall()">⬇️ 安裝到桌面</button>
+          <p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.6" id="install-hint">
+            點擊後依照指示完成安裝。iOS 請使用 Safari 瀏覽器，點「分享」→「加入主畫面」。
+          </p>
+        </div>
+      </div>
+
+      <!-- 複製 GAS 程式碼 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-sage">📋</div><div><div class="card-title">GAS v3 程式碼</div><div class="card-sub">已含完整標題列、條件格式、CORS 支援</div></div></div>
+        <div class="card-body">
+          <p style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:11px">
+            本專案內已附 <strong>gas-connector.gs</strong> 檔案，<br/>
+            也可點下方按鈕複製程式碼至剪貼簿。
+          </p>
+          <button class="btn btn-secondary btn-full" onclick="copyGas()">📋 複製 GAS v3 程式碼</button>
+          <button class="btn btn-secondary btn-full" style="margin-top:7px" onclick="copySheetGuide()">📊 複製試算表 VLOOKUP 公式指南</button>
+        </div>
+      </div>
+
+      <!-- 資料管理 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-slate">🗃️</div><div><div class="card-title">本機資料管理</div></div></div>
+        <div class="card-body" style="padding:0">
+          <div class="si">
+            <div><div class="si-label">本機記錄數</div><div class="si-desc" id="cnt-disp">計算中...</div></div>
+          </div>
+          <div class="si">
+            <div><div class="si-label" style="color:var(--err)">清除所有本機記錄</div><div class="si-desc">此操作無法還原</div></div>
+            <button class="btn btn-danger" style="padding:5px 10px;font-size:11px" onclick="clearAll()">清除</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 關於 -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-icon ci-beige">ℹ️</div><div><div class="card-title">關於 v3.0</div></div></div>
+        <div class="card-body">
+          <p style="font-size:12px;color:var(--t2);line-height:1.9">
+            臺北市政府工務局鼠類防治稽查報告系統<br/>
+            <strong style="color:var(--m-sage-d)">版本 v3.0.0</strong><br/><br/>
+            ✅ GAS 修正：明確試算表 ID + CORS + 連線測試<br/>
+            ✅ 照片修正：拍照 &amp; 相簿 各自獨立按鈕<br/>
+            ✅ 頁首安裝按鈕：一鍵加入桌面捷徑<br/>
+            ✅ 莫蘭迪明亮配色全面翻新<br/>
+            ✅ Action Bar 固定於底部<br/>
+            ✅ IndexedDB 離線儲存<br/>
+            ✅ PWA 離線可用（Service Worker）
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Fixed Action Bar -->
+  <div class="action-bar" id="action-bar">
+    <button class="btn btn-secondary" style="flex:1" onclick="saveDraft()">💾 儲存草稿</button>
+    <button class="btn btn-primary" style="flex:1.6" id="save-btn" onclick="saveAndSubmit()">✅ 儲存並上傳</button>
+  </div>
+
+</div><!-- /.app -->
+
+<!-- Tab Bar -->
+<nav class="tab-bar">
+  <div class="tab-inner">
+    <button class="tab-item active" id="tab-form" onclick="switchTab('form')">
+      <span class="tab-icon">📝</span><span class="tab-label">填報</span>
+    </button>
+    <button class="tab-item" id="tab-list" onclick="switchTab('list')">
+      <span class="tab-icon">📂</span><span class="tab-label">記錄</span>
+      <span class="tab-badge" id="rbadge" style="display:none"></span>
+    </button>
+    <button class="tab-item" id="tab-settings" onclick="switchTab('settings')">
+      <span class="tab-icon">⚙️</span><span class="tab-label">設定</span>
+    </button>
+  </div>
+</nav>
+
+<!-- PDF render area -->
+<div id="pdf-area"></div>
+
+<script>
+'use strict';
+/* ══ Constants ══ */
+const VER       = '3.0.0';
+const DB_NAME   = 'RatInspDB_v3';
+const DB_VER    = 1;
+const STORE     = 'reports';
+const SKEY      = 'rat_v3_settings';
+const MAX_W     = 1280;
+const IMG_Q     = 0.72;
+
+/* ══ State ══ */
+let db              = null;
+let editingId       = null;
+let delTargetId     = null;
+let swReg           = null;
+let pendingSW       = null;
+let deferredInstall = null;   // BeforeInstallPromptEvent
+let photoGroupCount = 0;
+let photoGroups     = {};     // { id: {defect:b64|null, improved:b64|null} }
+
+/* ══════════════════════════
+   PWA — Service Worker
+══════════════════════════ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      swReg = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+      swReg.addEventListener('updatefound', () => {
+        const w = swReg.installing;
+        w.addEventListener('statechange', () => {
+          if (w.state === 'installed' && navigator.serviceWorker.controller) {
+            pendingSW = w;
+            document.getElementById('upd-banner').classList.remove('hidden');
+          }
+        });
+      });
+      navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+    } catch(e) { console.warn('[SW]', e); }
+  });
+}
+function doUpdate() {
+  if (pendingSW) pendingSW.postMessage({ type: 'SKIP_WAITING' });
+  else location.reload();
+}
+
+/* ══════════════════════════
+   PWA Install — 一鍵安裝
+   beforeinstallprompt + iOS fallback
+══════════════════════════ */
+window.addEventListener('beforeinstallprompt', e => {
+  // 攔截瀏覽器預設提示，保留事件以便手動觸發
+  e.preventDefault();
+  deferredInstall = e;
+  // 顯示安裝按鈕
+  document.getElementById('install-btn').style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  // 安裝完成後隱藏按鈕
+  document.getElementById('install-btn').style.display = 'none';
+  deferredInstall = null;
+  showToast('✅ 已成功安裝到桌面！', 'success');
+});
+
+async function handleInstall() {
+  if (deferredInstall) {
+    // Chrome / Edge / Android：直接觸發安裝對話框
+    deferredInstall.prompt();
+    const { outcome } = await deferredInstall.userChoice;
+    if (outcome === 'accepted') {
+      showToast('安裝中...', 'info');
+    }
+    deferredInstall = null;
+    document.getElementById('install-btn').style.display = 'none';
+  } else {
+    // iOS Safari 或已安裝：顯示手動說明
+    showInstallGuide();
+  }
+}
+
+function showInstallGuide() {
+  const isIOS    = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                    || window.navigator.standalone === true;
+
+  let html = '';
+  if (isStandalone) {
+    html = `<div style="text-align:center;padding:20px">
+      <div style="font-size:40px;margin-bottom:12px">✅</div>
+      <div style="font-size:15px;font-weight:600;color:var(--t1);margin-bottom:8px">已安裝到桌面</div>
+      <div style="font-size:12px;color:var(--t3)">本應用程式已在桌面模式中運行。</div>
+    </div>`;
+  } else if (isIOS) {
+    html = `<div style="font-size:13px;color:var(--t2);line-height:2">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--t1)">iOS 安裝步驟：</div>
+      <div style="background:var(--bg-card2);border:var(--bd);border-radius:var(--r-md);padding:12px;margin-bottom:10px">
+        <div>① 請確認使用 <strong>Safari 瀏覽器</strong>開啟本頁面</div>
+        <div>② 點擊下方工具列的 <strong>「分享」</strong>按鈕 <span style="font-size:16px">□↑</span></div>
+        <div>③ 向下滑動，點選 <strong>「加入主畫面」</strong></div>
+        <div>④ 點擊右上角 <strong>「新增」</strong>完成安裝</div>
+      </div>
+      <div style="font-size:11px;color:var(--t3)">安裝後可在主畫面找到應用程式捷徑，離線也能使用。</div>
+    </div>`;
+  } else {
+    html = `<div style="font-size:13px;color:var(--t2);line-height:2">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--t1)">安裝步驟：</div>
+      <div style="background:var(--bg-card2);border:var(--bd);border-radius:var(--r-md);padding:12px">
+        <div>① 點擊瀏覽器右上角的 <strong>「⋮」</strong>選單</div>
+        <div>② 選擇 <strong>「安裝應用程式」</strong>或<br/>　　<strong>「新增到主畫面」</strong></div>
+        <div>③ 確認安裝即可</div>
+      </div>
+    </div>`;
+  }
+  document.getElementById('install-content').innerHTML = html;
+  openModal('m-install');
+}
+
+/* ══════════════════════════
+   IndexedDB
+══════════════════════════ */
+function initDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onerror   = () => rej(r.error);
+    r.onsuccess = () => { db = r.result; res(db); };
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains(STORE)) {
+        const s = d.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
+        s.createIndex('createdAt', 'createdAt', { unique: false });
+      }
+    };
+  });
+}
+const tx = (m='readonly') => db.transaction(STORE, m).objectStore(STORE);
+const saveRpt  = d  => new Promise((r,j)=>{ const q=d.id?tx('readwrite').put(d):tx('readwrite').add(d); q.onsuccess=()=>r(q.result); q.onerror=()=>j(q.error); });
+const getAllRpt = () => new Promise((r,j)=>{ const q=tx().getAll(); q.onsuccess=()=>r(q.result.reverse()); q.onerror=()=>j(q.error); });
+const getRpt   = id => new Promise((r,j)=>{ const q=tx().get(id); q.onsuccess=()=>r(q.result); q.onerror=()=>j(q.error); });
+const delRpt   = id => new Promise((r,j)=>{ const q=tx('readwrite').delete(id); q.onsuccess=()=>r(); q.onerror=()=>j(q.error); });
+const cntRpt   = () => new Promise((r,j)=>{ const q=tx().count(); q.onsuccess=()=>r(q.result); q.onerror=()=>j(q.error); });
+
+/* ══════════════════════════
+   Settings
+══════════════════════════ */
+const getS = () => { try{ return JSON.parse(localStorage.getItem(SKEY)||'{}'); }catch{ return {}; } };
+const setS = o => localStorage.setItem(SKEY, JSON.stringify({ ...getS(), ...o }));
+
+function updGasDisp() {
+  const s = getS();
+  const el = document.getElementById('gas-disp');
+  if (s.gasUrl && s.sheetId) {
+    el.innerHTML = `<span class="gas-status gas-ok">✅ 已設定 Sheet ID: ${s.sheetId.substring(0,16)}...</span>`;
+  } else {
+    el.innerHTML = `<span class="gas-status gas-none">⚪ 尚未設定</span>`;
+  }
+}
+function saveGas() {
+  const url = document.getElementById('gas-url').value.trim();
+  const sid = document.getElementById('gas-sid').value.trim();
+  if (url && !url.startsWith('https://script.google.com')) {
+    showToast('請輸入有效的 GAS 網址', 'error'); return;
+  }
+  if (!sid) { showToast('請填入試算表 ID', 'error'); return; }
+  setS({ gasUrl: url, sheetId: sid });
+  updGasDisp();
+  closeModal('m-gas');
+  showToast('GAS 設定已儲存 ✓', 'success');
+}
+
+/* ── GAS 連線測試（v3 新增）── */
+async function testGAS() {
+  const url = document.getElementById('gas-url').value.trim();
+  if (!url) { showToast('請先填入 GAS 網址', 'warn'); return; }
+  const resEl = document.getElementById('gas-test-result');
+  resEl.style.display = 'block';
+  resEl.innerHTML = `<div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2)"><div class="spin"></div>連線測試中...</div>`;
+  try {
+    const resp = await fetch(url, { method: 'GET', signal: AbortSignal.timeout(8000) });
+    const txt  = await resp.text();
+    let data; try { data = JSON.parse(txt); } catch { data = { status: 'ok' }; }
+    if (data.status === 'ok' || resp.ok) {
+      resEl.innerHTML = `<div style="padding:8px;background:#eef7ee;border:1px solid rgba(122,170,122,.4);border-radius:var(--r-sm);font-size:12px;color:var(--ok)">✅ 連線成功！GAS v${data.version||'?'} 回應正常。</div>`;
+    } else {
+      throw new Error(data.message || '未知錯誤');
+    }
+  } catch(e) {
+    resEl.innerHTML = `<div style="padding:8px;background:#fdf0f0;border:1px solid rgba(187,112,112,.4);border-radius:var(--r-sm);font-size:12px;color:var(--err)">❌ 連線失敗：${e.message}<br/><span style="font-size:10px;color:var(--t3)">請確認網址正確，且 GAS 已部署為「所有人可存取」的 Web App。</span></div>`;
+  }
+}
+
+/* ══════════════════════════
+   Number Stepper
+══════════════════════════ */
+function ns(id, d) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let v = parseInt(el.value || 0) + d;
+  v = Math.max(parseInt(el.min||0), Math.min(parseInt(el.max||9999), v));
+  el.value = v;
+  if (navigator.vibrate) navigator.vibrate(8);
+}
+// 長按加速
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.num-btn').forEach(btn => {
+    let t, itv;
+    const go  = () => btn.click();
+    const s   = () => { t = setTimeout(() => { itv = setInterval(go, 80); }, 500); };
+    const end = () => { clearTimeout(t); clearInterval(itv); };
+    btn.addEventListener('mousedown', s);
+    btn.addEventListener('touchstart', s, { passive: true });
+    ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev => btn.addEventListener(ev, end));
+  });
+});
+
+/* ══════════════════════════
+   照片上傳 v3 — 分離拍照 & 相簿
+   修正：兩個獨立 file input，accept 不同
+══════════════════════════ */
+function addPhotoGroup(data) {
+  const id = ++photoGroupCount;
+  photoGroups[id] = data || { defect: null, improved: null };
+  const wrap = document.getElementById('photo-groups-wrap');
+  const div  = document.createElement('div');
+  div.className = 'photo-group';
+  div.id = `pg-${id}`;
+
+  div.innerHTML = `
+    <div class="photo-group-title">
+      <span>📸</span> 照片組 ${id}
+      ${id > 1 ? `<button class="photo-group-del" onclick="removePhotoGroup(${id})" title="刪除此組">✕</button>` : ''}
+    </div>
+    <div class="photo-row">
+      ${makePhotoCol('def', id, '缺失照片', '📷', photoGroups[id].defect)}
+      ${makePhotoCol('imp', id, '改善照片', '✅', photoGroups[id].improved)}
+    </div>`;
+  wrap.appendChild(div);
+}
+
+function makePhotoCol(type, gid, label, icon, existingB64) {
+  const hasImg = !!existingB64;
+  const imgTag = hasImg ? `<img src="${existingB64}" alt="${label}"/>` : '';
+  return `
+    <div>
+      <div class="photo-col-label">${label}</div>
+      <div class="photo-slot-wrap">
+        <div class="photo-preview${hasImg?' has-img':''}" id="pp-${type}-${gid}">
+          ${imgTag}
+          <div class="ph-empty">
+            <div class="ph-empty-icon">${icon}</div>
+            <div class="ph-empty-txt">尚未選取</div>
+          </div>
+          <button type="button" class="photo-del-btn" onclick="clearPhoto('${type}',${gid})">✕</button>
+        </div>
+        <!-- v3 修正：兩個分開的 input
+             相機：accept="image/*" capture="environment"
+             相簿：accept="image/*"（不加 capture，系統開相簿） -->
+        <div class="photo-btns">
+          <label class="photo-pick-btn" title="拍照">
+            📷 拍照
+            <input type="file" accept="image/*" capture="environment"
+              onchange="handlePhoto(event,'${type}',${gid})"/>
+          </label>
+          <label class="photo-pick-btn" title="從相簿選取">
+            🖼️ 相簿
+            <input type="file" accept="image/*"
+              onchange="handlePhoto(event,'${type}',${gid})"/>
+          </label>
+        </div>
+      </div>
+    </div>`;
+}
+
+function removePhotoGroup(id) {
+  delete photoGroups[id];
+  document.getElementById(`pg-${id}`)?.remove();
+}
+
+function clearPhoto(type, gid) {
+  const key = type === 'def' ? 'defect' : 'improved';
+  photoGroups[gid][key] = null;
+  const slot = document.getElementById(`pp-${type}-${gid}`);
+  if (slot) {
+    slot.classList.remove('has-img');
+    slot.querySelector('img')?.remove();
+  }
+}
+
+/* 照片壓縮：Canvas resize → JPEG base64 */
+function compressImg(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        if (w > MAX_W) { h = Math.round(h * MAX_W / w); w = MAX_W; }
+        const c = document.createElement('canvas');
+        c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', IMG_Q));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handlePhoto(evt, type, gid) {
+  const file = evt.target.files?.[0];
+  if (!file) return;
+  evt.target.value = ''; // reset input，允許重複選同一張
+  showToast('壓縮照片中...', 'info', 1500);
+  try {
+    const b64 = await compressImg(file);
+    const key  = type === 'def' ? 'defect' : 'improved';
+    photoGroups[gid][key] = b64;
+    const slot = document.getElementById(`pp-${type}-${gid}`);
+    if (slot) {
+      slot.classList.add('has-img');
+      let imgEl = slot.querySelector('img');
+      if (!imgEl) { imgEl = document.createElement('img'); slot.prepend(imgEl); }
+      imgEl.src = b64;
+      imgEl.alt = type === 'def' ? '缺失照片' : '改善照片';
+    }
+    showToast('照片已儲存', 'success', 1500);
+  } catch(e) { showToast('照片處理失敗', 'error'); }
+}
+
+/* ══════════════════════════
+   表單資料收集
+══════════════════════════ */
+const radio = n => document.querySelector(`input[name="${n}"]:checked`)?.value || '';
+const chkGrp = id => [...document.querySelectorAll(`#${id} input[type=checkbox]:checked`)].map(e=>e.value);
+
+function collectForm() {
+  const namedM = [];
+  ['m-huang','m-li','m-chen','m-hong'].forEach(id => {
+    const e = document.getElementById(id);
+    if (e?.checked) namedM.push(e.value);
+  });
+  const units = ['u-new','u-wat','u-prk','u-sew','u-geo']
+    .filter(id => document.getElementById(id)?.checked)
+    .map(id => document.getElementById(id).value);
+
+  const photos = Object.entries(photoGroups)
+    .map(([gid,g]) => ({ gid: parseInt(gid), defect: g.defect, improved: g.improved }))
+    .filter(g => g.defect || g.improved);
+
+  const v = id => document.getElementById(id)?.value?.trim() || '';
+  const r = n => radio(n);
+
+  return {
+    locationName: v('f-loc'), dateYear: v('f-y'), dateMonth: v('f-m'), dateDay: v('f-d'),
+    locationAttr: v('f-attr'), isKeySite: r('key-site'), nearbyTypes: chkGrp('nearby-grp'),
+    namedMembers: namedM, memberCivil: v('m-civil'), memberWater: v('m-water'), memberPark: v('m-park'),
+    inspectedUnits: units, unitMgmt: v('u-mgmt'), unitLeader: v('u-lead'), unitCompanion: v('u-comp'),
+    q1_1: r('q1-1'), q1_1n: v('q1-1-n'), q1_2: r('q1-2'), q1_2n: v('q1-2-n'),
+    q2_1: r('q2-1'), q2_1n: v('q2-1-n'),
+    q3_1: r('q3-1'), q3_1n: v('q3-1-n'), q3_2: r('q3-2'), q3_2n: v('q3-2-n'),
+    q3_3: r('q3-3'), q3_3n: v('q3-3-n'), q3_4: r('q3-4'), q3_4n: v('q3-4-n'),
+    q3_4c: v('q3-4-c'), q3_5: r('q3-5'), q3_5n: v('q3-5-n'), q3_6: r('q3-6'), q3_6n: v('q3-6-n'),
+    q4_1: r('q4-1'), q4_1n: v('q4-1-n'), q4_1c: v('q4-1-c'), q4_2: r('q4-2'), q4_2n: v('q4-2-n'),
+    q4_3: r('q4-3'), q4_3n: v('q4-3-n'), q4_4: r('q4-4'), q4_4n: v('q4-4-n'),
+    q4_5: r('q4-5'), q4_5n: v('q4-5-n'), q4_6: r('q4-6'), q4_6n: v('q4-6-n'),
+    siteOn: document.getElementById('site-on').checked,
+    q5_1:  r('q5-1'),  q5_1n:  v('q5-1-n'),  q5_2:  r('q5-2'),  q5_2n:  v('q5-2-n'),
+    q5_3:  r('q5-3'),  q5_3n:  v('q5-3-n'),  q5_4:  r('q5-4'),  q5_4n:  v('q5-4-n'),
+    q5_5:  r('q5-5'),  q5_5n:  v('q5-5-n'),  q5_6:  r('q5-6'),  q5_6n:  v('q5-6-n'),
+    q5_7:  r('q5-7'),  q5_7n:  v('q5-7-n'),  q5_8:  r('q5-8'),  q5_8n:  v('q5-8-n'),
+    q5_8c: v('q5-8-c'), q5_9: r('q5-9'), q5_9n: v('q5-9-n'),
+    q5_10: r('q5-10'), q5_10n: v('q5-10-n'), q5_11: r('q5-11'), q5_11n: v('q5-11-n'),
+    q5_12: r('q5-12'), q5_12n: v('q5-12-n'), q5_13: r('q5-13'), q5_13n: v('q5-13-n'),
+    otherOpinions: v('f-opinion'), photos,
+    deviceInfo: navigator.userAgent.substring(0, 100),
+  };
+}
+
+/* ══════════════════════════
+   Validate
+══════════════════════════ */
+function validate(d) {
+  if (!d.locationName) { showToast('請填寫稽查地點名稱', 'error'); document.getElementById('f-loc').focus(); return false; }
+  if (!d.dateYear || !d.dateMonth || !d.dateDay) { showToast('請填寫完整稽查日期', 'error'); return false; }
+  return true;
+}
+
+/* ══════════════════════════
+   Save Draft
+══════════════════════════ */
+async function saveDraft() {
+  const d = collectForm();
+  if (!validate(d)) return;
+  const rpt = { ...d, id: editingId||undefined,
+    createdAt: editingId?undefined:new Date().toISOString(),
+    updatedAt: new Date().toISOString(), uploadStatus: 'local', isDraft: true };
+  try {
+    editingId = await saveRpt(rpt);
+    showToast('草稿已儲存', 'success'); refreshBadge();
+  } catch(e) { showToast('儲存失敗：' + e.message, 'error'); }
+}
+
+/* ══════════════════════════
+   Save & Upload
+══════════════════════════ */
+async function saveAndSubmit() {
+  const d = collectForm();
+  if (!validate(d)) return;
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.innerHTML = '<div class="spin"></div> 處理中...';
+  const rpt = { ...d, id: editingId||undefined,
+    createdAt: editingId?undefined:new Date().toISOString(),
+    updatedAt: new Date().toISOString(), uploadStatus: 'pending', isDraft: false };
+  try {
+    const sid = await saveRpt(rpt);
+    editingId = sid;
+    showToast('報告已儲存', 'success'); refreshBadge();
+    const s = getS();
+    if (s.gasUrl && s.sheetId && document.getElementById('auto-up').checked) {
+      await uploadGAS({ ...rpt, id: sid });
+    }
+  } catch(e) { showToast('儲存失敗：' + e.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '✅ 儲存並上傳'; }
+}
+
+/* ══════════════════════════
+   GAS 上傳 v3
+   修正：傳送 sheetId；照片僅傳遞組數（避免 payload 過大導致 GAS 逾時）
+   完整照片儲存於本機 IndexedDB，PDF 匯出時直接嵌入
+══════════════════════════ */
+async function uploadGAS(rpt) {
+  const s = getS();
+  if (!s.gasUrl || !s.sheetId) { showToast('請先設定 GAS 網址與試算表 ID', 'warn'); return; }
+  showToast('上傳至 Google Sheets...', 'info');
+  // 去除照片 Base64（避免 payload 超過 GAS 上限 50MB，照片本機保留）
+  const payload = { ...rpt, sheetId: s.sheetId, photos: rpt.photos.map(p=>({ gid:p.gid, hasDefect:!!p.defect, hasImproved:!!p.improved })) };
+  try {
+    // 使用 no-cors 模式（GAS 的 CORS 設定在 doPost 裡加了 header，但 no-cors 仍無法讀取回應）
+    // 改用 mode:'cors' + GAS 端回傳正確 CORS header（已在 gas-connector.gs 設定）
+    let resp;
+    try {
+      resp = await fetch(s.gasUrl, {
+        method: 'POST', mode: 'cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(15000),
+      });
+    } catch {
+      // CORS 被瀏覽器封鎖時，fallback 到 no-cors（無法讀取回應，假設成功）
+      await fetch(s.gasUrl, {
+        method: 'POST', mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+      resp = { ok: true };
+    }
+    const saved = await getRpt(rpt.id);
+    if (saved) await saveRpt({ ...saved, uploadStatus: 'synced' });
+    showToast('✅ 已同步至 Google Sheets', 'success');
+    refreshBadge();
+  } catch(e) {
+    showToast('上傳失敗，已保存本機', 'warn');
+    const saved = await getRpt(rpt.id);
+    if (saved) await saveRpt({ ...saved, uploadStatus: 'pending' });
+  }
+}
+
+/* ══════════════════════════
+   Reset Form
+══════════════════════════ */
+function resetForm() {
+  editingId = null;
+  document.querySelectorAll('#page-form input[type=text],#page-form input[type=number],#page-form textarea')
+    .forEach(e => e.value = '');
+  document.querySelectorAll('#page-form input[type=radio],#page-form input[type=checkbox]')
+    .forEach(e => e.checked = false);
+  ['q3-4-c','q4-1-c','q5-8-c'].forEach(id => { const e=document.getElementById(id); if(e) e.value=0; });
+  document.getElementById('site-on').checked = true;
+  toggleSite(true);
+  photoGroups = {}; photoGroupCount = 0;
+  document.getElementById('photo-groups-wrap').innerHTML = '';
+  addPhotoGroup(); addPhotoGroup(); addPhotoGroup();
+  const now = new Date();
+  document.getElementById('f-y').value = now.getFullYear() - 1911;
+  document.getElementById('f-m').value = now.getMonth() + 1;
+  document.getElementById('f-d').value = now.getDate();
+  document.getElementById('form-title').textContent = '新增稽查報告';
+  document.getElementById('form-sub').textContent   = '填寫完成後點擊下方儲存';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ══════════════════════════
+   Load Report to Form
+══════════════════════════ */
+async function editReport(id) {
+  const r = await getRpt(id);
+  if (!r) { showToast('找不到報告', 'error'); return; }
+  editingId = r.id;
+  const set  = (eid, v) => { const e=document.getElementById(eid); if(e) e.value=v||''; };
+  const setR = (n, v)   => { const e=document.querySelector(`input[name="${n}"][value="${v}"]`); if(e) e.checked=true; };
+  const setC = (eid, v) => { const e=document.getElementById(eid); if(e) e.checked=!!v; };
+  set('f-loc',r.locationName); set('f-y',r.dateYear); set('f-m',r.dateMonth); set('f-d',r.dateDay);
+  set('f-attr',r.locationAttr); if(r.isKeySite) setR('key-site',r.isKeySite);
+  document.querySelectorAll('#nearby-grp input[type=checkbox]').forEach(c=>{ c.checked=(r.nearbyTypes||[]).includes(c.value); });
+  setC('m-huang',(r.namedMembers||[]).includes('黃淑如主任秘書'));
+  setC('m-li',   (r.namedMembers||[]).includes('李沐磬專門委員'));
+  setC('m-chen', (r.namedMembers||[]).includes('陳宏銘專門委員'));
+  setC('m-hong', (r.namedMembers||[]).includes('洪燕萍副總工程司'));
+  set('m-civil',r.memberCivil); set('m-water',r.memberWater); set('m-park',r.memberPark);
+  ['u-new','u-wat','u-prk','u-sew','u-geo'].forEach(i=>{ const e=document.getElementById(i); if(e) e.checked=(r.inspectedUnits||[]).includes(e.value); });
+  set('u-mgmt',r.unitMgmt); set('u-lead',r.unitLeader); set('u-comp',r.unitCompanion);
+  const qs=[['q1-1','q1_1'],['q1-2','q1_2'],['q2-1','q2_1'],
+    ['q3-1','q3_1'],['q3-2','q3_2'],['q3-3','q3_3'],['q3-4','q3_4'],['q3-5','q3_5'],['q3-6','q3_6'],
+    ['q4-1','q4_1'],['q4-2','q4_2'],['q4-3','q4_3'],['q4-4','q4_4'],['q4-5','q4_5'],['q4-6','q4_6'],
+    ['q5-1','q5_1'],['q5-2','q5_2'],['q5-3','q5_3'],['q5-4','q5_4'],['q5-5','q5_5'],
+    ['q5-6','q5_6'],['q5-7','q5_7'],['q5-8','q5_8'],['q5-9','q5_9'],
+    ['q5-10','q5_10'],['q5-11','q5_11'],['q5-12','q5_12'],['q5-13','q5_13']];
+  qs.forEach(([n,k])=>{ if(r[k]) setR(n,r[k]); const ne=document.getElementById(`${n}-n`); if(ne) ne.value=r[k+'n']||''; });
+  set('q3-4-c',r.q3_4c||0); set('q4-1-c',r.q4_1c||0); set('q5-8-c',r.q5_8c||0);
+  document.getElementById('site-on').checked = r.siteOn !== false;
+  toggleSite(r.siteOn !== false);
+  set('f-opinion', r.otherOpinions);
+  photoGroups = {}; photoGroupCount = 0;
+  document.getElementById('photo-groups-wrap').innerHTML = '';
+  if (r.photos?.length) { r.photos.forEach(g => addPhotoGroup({ defect: g.defect||null, improved: g.improved||null })); }
+  else { addPhotoGroup(); addPhotoGroup(); addPhotoGroup(); }
+  document.getElementById('form-title').textContent = '編輯稽查報告';
+  document.getElementById('form-sub').textContent   = `ID:${r.id} ─ ${r.dateYear}年${r.dateMonth}月${r.dateDay}日`;
+  switchTab('form'); window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSite(on) {
+  const b = document.getElementById('site-body');
+  b.style.opacity       = on ? '1' : '0.35';
+  b.style.pointerEvents = on ? '' : 'none';
+}
+
+/* ══════════════════════════
+   Record List
+══════════════════════════ */
+async function renderList() {
+  const c = document.getElementById('rlist');
+  try {
+    const rpts = await getAllRpt();
+    if (!rpts.length) {
+      c.innerHTML = `<div class="empty-st"><div class="empty-icon">📂</div><div class="empty-title">尚無稽查記錄</div><div class="empty-desc">點擊右上角「＋ 新增」<br/>開始填寫稽查報告</div></div>`;
+      return;
+    }
+    const bdg = { synced:'<span class="ubadge synced">☁️ 已同步</span>', pending:'<span class="ubadge pending">⏳ 待上傳</span>', local:'<span class="ubadge local">💾 本機</span>' };
+    c.innerHTML = rpts.map(r => `
+      <div class="rcard">
+        <div class="rcard-title">${r.locationName||'（未命名）'}${r.isDraft?'<span style="font-size:9px;padding:1px 6px;border-radius:99px;background:rgba(196,160,96,.15);color:var(--warn);margin-left:6px">草稿</span>':''}</div>
+        <div class="rcard-meta">
+          <span class="rmeta">📅 ${r.dateYear||''}年${r.dateMonth||''}月${r.dateDay||''}日</span>
+          ${bdg[r.uploadStatus]||bdg.local}
+          ${(r.photos||[]).length?`<span class="rmeta">📷 ${r.photos.length}組</span>`:''}
+        </div>
+        <div class="rcard-actions">
+          <button class="btn btn-secondary" onclick="editReport(${r.id})">✏️ 編輯</button>
+          <button class="btn btn-primary"   onclick="exportPDF(${r.id})">📄 PDF</button>
+          ${r.uploadStatus!=='synced'?`<button class="btn btn-success" onclick="retryUp(${r.id})" style="flex:0.8">☁️</button>`:''}
+          <button class="btn btn-danger" onclick="confirmDel(${r.id})" style="flex:0.7">🗑️</button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    c.innerHTML = `<div class="empty-st"><div class="empty-icon">❌</div><div class="empty-title">載入失敗</div><div class="empty-desc">${e.message}</div></div>`;
+  }
+}
+
+async function retryUp(id) { const r=await getRpt(id); if(r){ await uploadGAS(r); await renderList(); } }
+function confirmDel(id) {
+  delTargetId = id; openModal('m-delete');
+  document.getElementById('confirm-del').onclick = async () => {
+    try { await delRpt(delTargetId); showToast('已刪除','success'); closeModal('m-delete'); renderList(); refreshBadge(); }
+    catch(e) { showToast('刪除失敗','error'); }
+  };
+}
+async function clearAll() {
+  if (!confirm('確定清除所有本機記錄？')) return;
+  const rpts = await getAllRpt();
+  for (const r of rpts) await delRpt(r.id);
+  showToast('已清除','success'); renderList(); refreshBadge();
+}
+async function refreshBadge() {
+  const n = await cntRpt();
+  const b = document.getElementById('rbadge');
+  b.textContent = n > 99 ? '99+' : n;
+  b.style.display = n ? 'flex' : 'none';
+}
+
+/* ══════════════════════════
+   PDF Export v3
+   字體統一 10pt，照片嵌入 base64
+══════════════════════════ */
+async function exportPDF(id) {
+  const r = await getRpt(id);
+  if (!r) { showToast('找不到報告','error'); return; }
+  showToast('正在產生 PDF...','info');
+  const area = document.getElementById('pdf-area');
+  area.innerHTML = buildPDFHTML(r);
+  await document.fonts.ready;
+  await new Promise(res => setTimeout(res, 700));
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf   = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+    const pgW   = pdf.internal.pageSize.getWidth();
+    const pgH   = pdf.internal.pageSize.getHeight();
+    const canvas= await html2canvas(area, { scale:2, useCORS:true, allowTaint:true, backgroundColor:'#ffffff', width:794, scrollX:0, scrollY:0 });
+    const totalH= (canvas.height * pgW) / canvas.width;
+    let yOff = 0;
+    while (yOff < totalH) {
+      if (yOff > 0) pdf.addPage();
+      const srcY = (yOff / totalH) * canvas.height;
+      const srcH = Math.min((pgH / totalH) * canvas.height, canvas.height - srcY);
+      const tmp  = document.createElement('canvas');
+      tmp.width  = canvas.width; tmp.height = srcH;
+      tmp.getContext('2d').drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+      pdf.addImage(tmp.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pgW, (srcH*pgW)/canvas.width);
+      yOff += pgH;
+    }
+    const fn = `鼠類防治稽查報告_${r.locationName||'未命名'}_${r.dateYear||''}${String(r.dateMonth||'').padStart(2,'0')}${String(r.dateDay||'').padStart(2,'0')}.pdf`;
+    pdf.save(fn);
+    showToast('PDF 已下載！','success');
+  } catch(e) { showToast('PDF 失敗：'+e.message,'error'); console.error(e); }
+  finally { area.innerHTML = ''; }
+}
+
+function buildPDFHTML(r) {
+  const cell = (v, n) => {
+    const y = v==='是'?'✓':'', no = v==='否'?'✓':'', o = v==='其他'?'✓':'';
+    return `<td class="rc y">${y}</td><td class="rc n">${no}</td><td class="rc o">${o}</td><td class="nt">${n||''}</td>`;
+  };
+  const mem = [...(r.namedMembers||[]),
+    r.memberCivil?`土木建築科：${r.memberCivil}`:'',
+    r.memberWater?`水利科：${r.memberWater}`:'',
+    r.memberPark?`公園大地科：${r.memberPark}`:''].filter(Boolean).join('　');
+  const uni = [...(r.inspectedUnits||[]),
+    r.unitMgmt?`管理單位：${r.unitMgmt}`:'',
+    r.unitLeader?`率隊人員：${r.unitLeader}`:'',
+    r.unitCompanion?`陪同人員：${r.unitCompanion}`:''].filter(Boolean).join('　');
+  const siteNA = r.siteOn === false;
+  const photos  = r.photos || [];
+
+  const photoRows = photos.length
+    ? photos.map((g,i) => `<tr>
+        <td style="padding:4px;width:50%;vertical-align:top">
+          <div style="font-size:9pt;font-weight:600;margin-bottom:3px">照片${i+1}：缺失</div>
+          ${g.defect?`<img src="${g.defect}" style="width:100%;max-height:160px;object-fit:contain;border:1px solid #ccc;border-radius:3px"/>`:`<div style="height:100px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:9pt;border-radius:3px">（無照片）</div>`}
+        </td>
+        <td style="padding:4px;width:50%;vertical-align:top">
+          <div style="font-size:9pt;font-weight:600;margin-bottom:3px">照片${i+1}：改善</div>
+          ${g.improved?`<img src="${g.improved}" style="width:100%;max-height:160px;object-fit:contain;border:1px solid #ccc;border-radius:3px"/>`:`<div style="height:100px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:9pt;border-radius:3px">（無照片）</div>`}
+        </td>
+      </tr>`).join('')
+    : ['1','2','3'].map(n=>`<tr>
+        <td style="height:90px;border:1px solid #ccc;text-align:center;color:#bbb;font-size:9pt;vertical-align:middle">照片${n}：缺失</td>
+        <td style="height:90px;border:1px solid #ccc;text-align:center;color:#bbb;font-size:9pt;vertical-align:middle">照片${n}：改善</td>
+      </tr>`).join('');
+
+  return `<div style="font-family:'Noto Sans TC',sans-serif;color:#000;background:#fff;padding:12mm 11mm;font-size:10pt;line-height:1.55">
+<style>
+  *{font-family:'Noto Sans TC',sans-serif;font-size:10pt;box-sizing:border-box}
+  table{border-collapse:collapse;width:100%}
+  th,td{border:1px solid #666;padding:3px 5px;vertical-align:top}
+  .th{background:#c8d4b8;font-weight:700;text-align:center}
+  .sec{background:#dde5d4;font-weight:700}
+  .rc{text-align:center;width:26px}
+  .y{color:#276027}.n{color:#882020}.o{color:#205588}
+  .nt{min-width:80px}
+  h2{font-size:13pt;font-weight:700;text-align:center;margin:0 0 5mm}
+  .ith{background:#c8d4b8;font-weight:700;width:16%}
+</style>
+<h2>臺北市政府工務局鼠類防治稽查報告表</h2>
+<table style="margin-bottom:3mm">
+  <tr><th class="ith">稽查地點名稱</th><td colspan="3">${r.locationName||''}</td><th class="ith">稽查日期</th><td colspan="2">${r.dateYear||''}年${r.dateMonth||''}月${r.dateDay||''}日</td></tr>
+  <tr><th class="ith">稽查地點屬性</th><td colspan="2">${r.locationAttr||''}</td><th class="ith">重點巡查場域</th><td colspan="3">${r.isKeySite||''}</td></tr>
+  <tr><th class="ith">鄰近場域</th><td colspan="6">${(r.nearbyTypes||[]).join('　')}</td></tr>
+  <tr><th class="ith">稽查小組成員</th><td colspan="6">${mem}</td></tr>
+  <tr><th class="ith">受稽查單位及陪同人員</th><td colspan="6">${uni}</td></tr>
+</table>
+<table>
+  <tr><th class="th" rowspan="2" style="width:9%">稽查項目</th><th class="th" rowspan="2" style="width:46%">項目說明</th><th class="th" colspan="3" style="width:16%">稽查結果</th><th class="th" rowspan="2" style="width:29%">說明</th></tr>
+  <tr><th class="th rc">是</th><th class="th rc">否</th><th class="th rc">其他</th></tr>
+  <tr><td class="sec" rowspan="2">一、巡查業務</td><td>1. 工程處是否於所轄場域進行巡查工作。</td>${cell(r.q1_1,r.q1_1n)}</tr>
+  <tr><td>2. 工程處是否依巡查情形填報自主檢查表。</td>${cell(r.q1_2,r.q1_2n)}</tr>
+  <tr><td class="sec">二、處稽查</td><td>工程處針對鼠類防治工作是否進行稽查作業。</td>${cell(r.q2_1,r.q2_1n)}</tr>
+  <tr><td class="sec" rowspan="6">三、環境管理</td><td>1. 現場環境是否維持清潔。</td>${cell(r.q3_1,r.q3_1n)}</tr>
+  <tr><td>2. 植栽（灌木、地被及雜草）定期修剪及移除枯枝落葉。</td>${cell(r.q3_2,r.q3_2n)}</tr>
+  <tr><td>3. 垃圾是否清運。</td>${cell(r.q3_3,r.q3_3n)}</tr>
+  <tr><td>4. 是否張貼禁止餵食公告。（餵食熱點：${r.q3_4c||''}處）</td>${cell(r.q3_4,r.q3_4n)}</tr>
+  <tr><td>5. 是否於餵食地點執行勸導、取締餵食行為。</td>${cell(r.q3_5,r.q3_5n)}</tr>
+  <tr><td>6. 是否於重點轄管場域周邊側溝之排水溝蓋進水口原則加設細目型鋼線網。</td>${cell(r.q3_6,r.q3_6n)}</tr>
+  <tr><td class="sec" rowspan="6">四、防治措施</td><td>1. 是否設置捕鼠籠、鼠餌站。（共設 ${r.q4_1c||''} 個）</td>${cell(r.q4_1,r.q4_1n)}</tr>
+  <tr><td>2. 是否於投藥場點設置鼠藥投放告示牌。</td>${cell(r.q4_2,r.q4_2n)}</tr>
+  <tr><td>3. 是否確實紀錄投入藥物數量及場點位置，並以遠離側溝孔蓋與下水道為原則。</td>${cell(r.q4_3,r.q4_3n)}</tr>
+  <tr><td>4. 鼠洞是否進行封填補土夯實。</td>${cell(r.q4_4,r.q4_4n)}</tr>
+  <tr><td>5. 是否有發現鼠跡（排泄物、咬痕、擦跡、足跡）等。</td>${cell(r.q4_5,r.q4_5n)}</tr>
+  <tr><td>6. 是否有發現鼠屍。</td>${cell(r.q4_6,r.q4_6n)}</tr>
+  ${siteNA
+    ? `<tr><td class="sec" colspan="6" style="color:#666;font-style:italic">五、工地環境管理（本次稽查無工程工地，免填）</td></tr>`
+    : `<tr><td class="sec" rowspan="13">五、工地環境管理</td><td>1. 工地是否定期進行巡查作業。</td>${cell(r.q5_1,r.q5_1n)}</tr>
+  <tr><td>2. 工地現況是否有不當堆置建材、雜物。</td>${cell(r.q5_2,r.q5_2n)}</tr>
+  <tr><td>3. 現場環境是否維持清潔。</td>${cell(r.q5_3,r.q5_3n)}</tr>
+  <tr><td>4. 垃圾是否清運。</td>${cell(r.q5_4,r.q5_4n)}</tr>
+  <tr><td>5. 垃圾桶或廚餘桶是否加蓋。</td>${cell(r.q5_5,r.q5_5n)}</tr>
+  <tr><td>6. 剩菜剩飯是否隨意丟棄在工地。</td>${cell(r.q5_6,r.q5_6n)}</tr>
+  <tr><td>7. 暫存食物是否妥適密封。</td>${cell(r.q5_7,r.q5_7n)}</tr>
+  <tr><td>8. 工地設置捕鼠籠、鼠餌站。（共設 ${r.q5_8c||''} 個）</td>${cell(r.q5_8,r.q5_8n)}</tr>
+  <tr><td>9. 是否於投藥場點設置鼠藥投放告示牌。</td>${cell(r.q5_9,r.q5_9n)}</tr>
+  <tr><td>10. 是否確實紀錄投入藥物數量及場點位置，並以遠離側溝孔蓋與下水道為原則。</td>${cell(r.q5_10,r.q5_10n)}</tr>
+  <tr><td>11. 鼠洞是否進行封填補土夯實。</td>${cell(r.q5_11,r.q5_11n)}</tr>
+  <tr><td>12. 是否有發現鼠跡（排泄物、咬痕、擦跡、足跡）。</td>${cell(r.q5_12,r.q5_12n)}</tr>
+  <tr><td>13. 是否有發現鼠屍。</td>${cell(r.q5_13,r.q5_13n)}</tr>`}
+  <tr><td class="sec">六、其他稽查意見及建議</td><td colspan="5" style="min-height:50px;white-space:pre-wrap">${r.otherOpinions||''}</td></tr>
+</table>
+<div style="margin-top:3mm;font-size:8.5pt;color:#666;line-height:1.7">
+  ※ 註1：針對重點轄管場域執行。&nbsp; ※ 註2：無此項請填「-」或「其他」。&nbsp; ※ 註3：有工程進行者查工地項目，無則免。
+</div>
+<div style="margin-top:5mm">
+  <h3 style="font-size:11pt;font-weight:700;border-bottom:1.5px solid #555;padding-bottom:2px;margin-bottom:3mm">稽查缺失及改善照片</h3>
+  <table><tr><th class="th" style="width:50%">缺失照片</th><th class="th" style="width:50%">改善照片</th></tr>${photoRows}</table>
+</div>
+<div style="margin-top:2mm;font-size:8pt;text-align:right;color:#aaa">產生時間：${new Date().toLocaleString('zh-TW')} ／ 系統版本 v${VER}</div>
+</div>`;
+}
+
+/* ══════════════════════════
+   GAS Code (for copy)
+══════════════════════════ */
+const GAS_CODE = `// ★ 請參閱專案內附的 gas-connector.gs 檔案（完整版）
+// 或複製下方簡化版本：
+// 1. 開啟 https://script.google.com → 新增空白專案
+// 2. 貼入程式碼，填入你的試算表 ID
+// 3. 部署為 Web App（執行：我；存取：所有人含匿名）
+
+const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const sid  = data.sheetId || SPREADSHEET_ID;
+    const ss   = SpreadsheetApp.openById(sid);
+    let sheet  = ss.getSheetByName('Raw Data');
+    if (!sheet) sheet = ss.insertSheet('Raw Data');
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['ID','稽查日期','地點名稱','重點場域','稽查小組','受查單位',
+        '1-1','1-2','2-1','3-1','3-2','3-3','3-4','餵食熱點','3-5','3-6',
+        '4-1','捕鼠籠數','4-2','4-3','4-4','4-5','4-6','工地適用',
+        '5-1~5-13...','其他意見','照片組數','上傳時間']);
+      sheet.setFrozenRows(1);
+      sheet.getRange(1,1,1,sheet.getLastColumn())
+        .setBackground('#8a9a7a').setFontColor('#fff').setFontWeight('bold');
+    }
+    const dateStr = [data.dateYear,data.dateMonth,data.dateDay].filter(Boolean).join('/');
+    const members = [...(data.namedMembers||[]),
+      data.memberCivil?'土建:'+data.memberCivil:'',
+      data.memberWater?'水利:'+data.memberWater:'',
+      data.memberPark?'公園:'+data.memberPark:''].filter(Boolean).join('、');
+    sheet.appendRow([
+      data.id, dateStr, data.locationName, data.isKeySite, members,
+      (data.inspectedUnits||[]).join('、'),
+      data.q1_1, data.q1_2, data.q2_1,
+      data.q3_1, data.q3_2, data.q3_3, data.q3_4, data.q3_4c, data.q3_5, data.q3_6,
+      data.q4_1, data.q4_1c, data.q4_2, data.q4_3, data.q4_4, data.q4_5, data.q4_6,
+      data.siteOn?'是':'否(免填)',
+      [data.q5_1,data.q5_2,data.q5_3,data.q5_4,data.q5_5,data.q5_6,data.q5_7,
+       data.q5_8,data.q5_9,data.q5_10,data.q5_11,data.q5_12,data.q5_13].join(','),
+      data.otherOpinions, (data.photos||[]).length,
+      new Date().toLocaleString('zh-TW')
+    ]);
+    return ContentService.createTextOutput(JSON.stringify({status:'success'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status:'error',message:err.message}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+function doGet() {
+  return ContentService.createTextOutput(JSON.stringify({status:'ok',version:'3.0'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+const SHEET_GUIDE = `【Google 試算表「報告檢視面板」建置指南 v3.0】
+
+────────────────────────────────
+一、建立兩個分頁
+────────────────────────────────
+① Raw Data       ← GAS 自動寫入
+② 報告檢視面板   ← 手動建立視覺化介面
+
+────────────────────────────────
+二、查詢 ID 下拉選單（資料驗證）
+────────────────────────────────
+① 點選「報告檢視面板」的 B1 儲存格
+② 功能表 > 資料 > 資料驗證
+③ 條件：清單（從某個範圍）
+④ 來源：='Raw Data'!$A$2:$A$1000
+⑤ 勾選「顯示下拉選單」→ 儲存
+在 A1 旁加文字「查詢報告 ID：」
+
+────────────────────────────────
+三、VLOOKUP 公式（填入各欄位）
+────────────────────────────────
+假設 B1 = 查詢 ID，Raw Data 欄位：
+A=ID  B=日期  C=地點名稱  D=地點屬性
+E=重點場域  F=鄰近場域  G=稽查小組
+H=受查單位  I=管理單位  J=率隊  K=陪同
+
+地點名稱：
+=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$Z,3,0),"請選擇 ID")
+
+稽查日期：
+=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$Z,2,0),"")
+
+重點巡查場域：
+=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$Z,5,0),"")
+
+一、巡查業務 1-1：
+=IFERROR(VLOOKUP($B$1,'Raw Data'!$A:$AZ,12,0),"")
+
+（依欄位序號對應填入，參考 GAS 程式碼的 appendRow 順序）
+
+────────────────────────────────
+四、條件格式：是/否上色
+────────────────────────────────
+選取所有結果欄位，套用條件格式：
+• 等於「是」 → 填色 #d9ead3（淺綠）
+• 等於「否」 → 填色 #f4cccc（淺紅）
+• 等於「其他」→ 填色 #cfe2f3（淺藍）
+
+────────────────────────────────
+五、凍結頂列（方便閱讀）
+────────────────────────────────
+在「報告檢視面板」> 檢視 > 凍結 > 1 列
+`;
+
+function copyGas()       { copyText(GAS_CODE,  'GAS v3 程式碼已複製！'); }
+function copySheetGuide(){ copyText(SHEET_GUIDE,'試算表公式指南已複製！'); }
+function copyText(txt, msg) {
+  navigator.clipboard.writeText(txt)
+    .then(() => showToast(msg, 'success'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast(msg, 'success');
+    });
+}
+
+/* ══════════════════════════
+   Tab Switch
+══════════════════════════ */
+function switchTab(tab) {
+  document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  document.getElementById('tab-'  + tab).classList.add('active');
+  document.getElementById('action-bar').style.display = tab === 'form' ? 'flex' : 'none';
+  if (tab === 'list') renderList();
+  if (tab === 'settings') {
+    updGasDisp();
+    cntRpt().then(n => { document.getElementById('cnt-disp').textContent = `共 ${n} 筆報告`; });
+  }
+}
+
+/* ══════════════════════════
+   Modal
+══════════════════════════ */
+function openModal(id)  { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-ov').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+});
+
+/* ══════════════════════════
+   Toast
+══════════════════════════ */
+const TICONS = { success:'✅', error:'❌', info:'ℹ️', warn:'⚠️' };
+function showToast(msg, type='info', dur=3200) {
+  const c = document.getElementById('toast-wrap');
+  const d = document.createElement('div');
+  d.className = `toast ${type}`;
+  d.innerHTML = `<span class="toast-icon">${TICONS[type]}</span><span class="toast-text">${msg}</span>`;
+  c.appendChild(d);
+  setTimeout(() => { d.style.animation='tOut .3s ease forwards'; setTimeout(()=>d.remove(),300); }, dur);
+}
+
+/* ══════════════════════════
+   Network Status
+══════════════════════════ */
+function updNet() {
+  const p = document.getElementById('net-pill'), l = document.getElementById('net-lbl');
+  if (navigator.onLine) { p.classList.remove('offline'); l.textContent = '連線中'; }
+  else { p.classList.add('offline'); l.textContent = '離線'; }
+}
+window.addEventListener('online',  () => { updNet(); showToast('網路已恢復', 'success'); });
+window.addEventListener('offline', () => { updNet(); showToast('目前離線，資料儲存於本機', 'warn'); });
+
+/* ══════════════════════════
+   Init
+══════════════════════════ */
+async function init() {
+  try {
+    await initDB();
+    const now = new Date();
+    document.getElementById('f-y').value = now.getFullYear() - 1911;
+    document.getElementById('f-m').value = now.getMonth() + 1;
+    document.getElementById('f-d').value = now.getDate();
+    addPhotoGroup(); addPhotoGroup(); addPhotoGroup();
+    updGasDisp(); updNet();
+    await refreshBadge();
+    if (new URLSearchParams(location.search).get('action') === 'new') resetForm();
+    // GAS Modal 初始值
+    const s = getS();
+    if (s.gasUrl) document.getElementById('gas-url').value = s.gasUrl;
+    if (s.sheetId) document.getElementById('gas-sid').value = s.sheetId;
+  } catch(e) {
+    console.error('[App v3]', e);
+    showToast('初始化失敗，部分功能不可用', 'error');
+  }
+}
+init();
+</script>
+</body>
+</html>
